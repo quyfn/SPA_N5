@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phản hồi đánh giá | MAI TRÂM Beauty &amp; Spa</title>
-    <link rel="stylesheet" href="{% static 'css/service-dashboard.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/service-dashboard.css' %}?v=7">
 </head>
 <body>
     <div class="app-shell">
-        <aside class="sidebar">
+        {% include 'includes/manager_nav.html' %}
+        {% comment %}<aside class="sidebar">
             <div class="brand">
                 <h1>MAI TRÂM</h1>
                 <p>Beauty &amp; Spa</p>
@@ -39,7 +40,7 @@
                     <span>Quản lý khách hàng</span>
                 </a>
             </nav>
-        </aside>
+        </aside>{% endcomment %}
 
         <main class="main-content">
             <header class="topbar">

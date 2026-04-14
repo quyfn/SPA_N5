@@ -283,6 +283,94 @@ def appointment_dashboard(request):
             "status_class": "red",
             "note": "Khách đến trễ nên lịch bị hủy",
         },
+        {
+            "id": 8,
+            "customer": "Trần Thị Yến",
+            "phone": "0912345678",
+            "service": "Chăm sóc da mặt cao cấp",
+            "date": "15/02/2026",
+            "time": "10:00",
+            "status": "Đang Tiến Hành",
+            "status_class": "green",
+            "note": "Khách sử dụng voucher giảm 20%",
+        },
+        {
+            "id": 9,
+            "customer": "Lương Thị Nhà",
+            "phone": "0923456789",
+            "service": "Massage body thư giãn",
+            "date": "14/02/2026",
+            "time": "14:30",
+            "status": "Hoàn Thành",
+            "status_class": "blue",
+            "note": "Khách thanh toán bằng thẻ",
+        },
+        {
+            "id": 10,
+            "customer": "Ngô Hồng Duyên",
+            "phone": "0934567890",
+            "service": "Triệt lông công nghệ Diode",
+            "date": "13/02/2026",
+            "time": "11:00",
+            "status": "Hoàn Thành",
+            "status_class": "blue",
+            "note": "Liệu trình 5 buổi, hoàn tất buổi thứ 3",
+        },
+        {
+            "id": 11,
+            "customer": "Bùi Thị Mỹ",
+            "phone": "0945678901",
+            "service": "Gội đầu dưỡng sinh",
+            "date": "16/02/2026",
+            "time": "15:00",
+            "status": "Hoàn Thành",
+            "status_class": "blue",
+            "note": "Khách mua thêm tinh dầu",
+        },
+        {
+            "id": 12,
+            "customer": "Đỗ Quỳnh Anh",
+            "phone": "0956789012",
+            "service": "Post-Acne Recovery Therapy",
+            "date": "17/02/2026",
+            "time": "9:30",
+            "status": "Hoàn Thành",
+            "status_class": "blue",
+            "note": "Khách yêu cầu tư vấn thêm",
+        },
+        {
+            "id": 13,
+            "customer": "Vũ Thị Hương",
+            "phone": "0967890123",
+            "service": "Acne Detox Therapy",
+            "date": "18/02/2026",
+            "time": "16:00",
+            "status": "Đang Tiến Hành",
+            "status_class": "green",
+            "note": "Khách lần đầu đến",
+        },
+        {
+            "id": 14,
+            "customer": "Trịnh Thị Loan",
+            "phone": "0978901234",
+            "service": "Chăm sóc da mặt cao cấp",
+            "date": "19/02/2026",
+            "time": "13:00",
+            "status": "Đã Hủy",
+            "status_class": "red",
+            "note": "Khách hủy 1 giờ trước",
+        },
+        {
+            "id": 15,
+            "customer": "Phan Thị Thảo",
+            "phone": "0989012345",
+            "service": "Massage body thư giãn",
+            "date": "20/02/2026",
+            "time": "10:30",
+            "status": "Hoàn Thành",
+            "status_class": "blue",
+            "note": "Khách đặt lịch tiếp tục",
+        },
     ]
     modal_state = request.GET.get("modal", "")
     return render(
@@ -297,13 +385,275 @@ def appointment_dashboard(request):
 
 def customer_dashboard(request):
     customers = [
-        {"id": 1, "name": "Nguyễn Thị Lan", "gender": "Nữ", "phone": "0901234567", "points": "500 điểm"},
-        {"id": 2, "name": "Phạm Thị Hoài", "gender": "Nữ", "phone": "0905050323", "points": "200 điểm"},
-        {"id": 3, "name": "Võ Bích Hợp", "gender": "Nữ", "phone": "0328775385", "points": "1.000 điểm"},
-        {"id": 4, "name": "Nguyễn Thị Hoa", "gender": "Nữ", "phone": "0384726564", "points": "300 điểm"},
-        {"id": 5, "name": "Lê Thị Bé Như", "gender": "Nữ", "phone": "0376258537", "points": "600 điểm"},
-        {"id": 6, "name": "Nguyễn Cao Sang", "gender": "Nam", "phone": "0387642458", "points": "100 điểm"},
-        {"id": 7, "name": "Đoàn Thanh Nhã", "gender": "Nam", "phone": "0927462684", "points": "100 điểm"},
+        {
+            "id": 1, 
+            "name": "Nguyễn Thị Lan", 
+            "gender": "Nữ", 
+            "age": "32",
+            "phone": "0901234567", 
+            "points": "500 điểm",
+            "email": "nguyen.lan@email.com",
+            "address": "Mỹ An, Ngũ Hành Sơn, TP Đà Nẵng",
+            "history": [
+                {"date": "30/01/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+                {"date": "15/02/2026", "service": "Post-Acne Recovery Therapy", "status": "Hoàn Thành", "price": "1.200.000"},
+            ]
+        },
+        {
+            "id": 2, 
+            "name": "Phạm Thị Hoài", 
+            "gender": "Nữ", 
+            "age": "28",
+            "phone": "0905050323", 
+            "points": "200 điểm",
+            "email": "pham.hoai@email.com",
+            "address": "Thanh Khê, TP Đà Nẵng",
+            "history": [
+                {"date": "10/02/2026", "service": "Triệt lông công nghệ Diode", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 3, 
+            "name": "Võ Bích Hợp", 
+            "gender": "Nữ", 
+            "age": "35",
+            "phone": "0328775385", 
+            "points": "1.000 điểm",
+            "email": "vo.bich@email.com",
+            "address": "Hải Châu, TP Đà Nẵng",
+            "history": [
+                {"date": "10/02/2026", "service": "Gội đầu dưỡng sinh", "status": "Hoàn Thành", "price": "300.000"},
+                {"date": "20/02/2026", "service": "Massage body thư giãn", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 4, 
+            "name": "Nguyễn Thị Hoa", 
+            "gender": "Nữ", 
+            "age": "26",
+            "phone": "0384726564", 
+            "points": "300 điểm",
+            "email": "nguyen.hoa@email.com",
+            "address": "Sơn Trà, TP Đà Nẵng",
+            "history": [
+                {"date": "11/02/2026", "service": "Post-Acne Recovery Therapy", "status": "Hoàn Thành", "price": "1.200.000"},
+            ]
+        },
+        {
+            "id": 5, 
+            "name": "Lê Thị Bé Như", 
+            "gender": "Nữ", 
+            "age": "30",
+            "phone": "0376258537", 
+            "points": "600 điểm",
+            "email": "le.be.nhu@email.com",
+            "address": "Liên Chiểu, TP Đà Nẵng",
+            "history": [
+                {"date": "05/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+                {"date": "12/02/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+            ]
+        },
+        {
+            "id": 6, 
+            "name": "Nguyễn Cao Sang", 
+            "gender": "Nam", 
+            "age": "29",
+            "phone": "0387642458", 
+            "points": "100 điểm",
+            "email": "nguyen.sang@email.com",
+            "address": "Cẩm Lệ, TP Đà Nẵng",
+            "history": [
+                {"date": "12/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+            ]
+        },
+        {
+            "id": 7, 
+            "name": "Đoàn Thanh Nhã", 
+            "gender": "Nam", 
+            "age": "27",
+            "phone": "0927462684", 
+            "points": "100 điểm",
+            "email": "doan.nha@email.com",
+            "address": "Ngũ Hành Sơn, TP Đà Nẵng",
+            "history": [
+                {"date": "02/02/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+            ]
+        },
+        {
+            "id": 8, 
+            "name": "Trần Thị Yến", 
+            "gender": "Nữ", 
+            "age": "31",
+            "phone": "0912345678", 
+            "points": "750 điểm",
+            "email": "tran.yen@email.com",
+            "address": "Thanh Khê, TP Đà Nẵng",
+            "history": [
+                {"date": "15/02/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+                {"date": "18/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+            ]
+        },
+        {
+            "id": 9, 
+            "name": "Lương Thị Nhà", 
+            "gender": "Nữ", 
+            "age": "24",
+            "phone": "0923456789", 
+            "points": "450 điểm",
+            "email": "luong.nha@email.com",
+            "address": "Hải Châu, TP Đà Nẵng",
+            "history": [
+                {"date": "14/02/2026", "service": "Massage body thư giãn", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 10, 
+            "name": "Ngô Hồng Duyên", 
+            "gender": "Nữ", 
+            "age": "33",
+            "phone": "0934567890", 
+            "points": "900 điểm",
+            "email": "ngo.duyen@email.com",
+            "address": "Sơn Trà, TP Đà Nẵng",
+            "history": [
+                {"date": "13/02/2026", "service": "Triệt lông công nghệ Diode", "status": "Hoàn Thành", "price": "800.000"},
+                {"date": "20/02/2026", "service": "Triệt lông công nghệ Diode", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 11, 
+            "name": "Bùi Thị Mỹ", 
+            "gender": "Nữ", 
+            "age": "25",
+            "phone": "0945678901", 
+            "points": "350 điểm",
+            "email": "bui.my@email.com",
+            "address": "Liên Chiểu, TP Đà Nẵng",
+            "history": [
+                {"date": "16/02/2026", "service": "Gội đầu dưỡng sinh", "status": "Hoàn Thành", "price": "300.000"},
+            ]
+        },
+        {
+            "id": 12, 
+            "name": "Đỗ Quỳnh Anh", 
+            "gender": "Nữ", 
+            "age": "29",
+            "phone": "0956789012", 
+            "points": "550 điểm",
+            "email": "do.anh@email.com",
+            "address": "Cẩm Lệ, TP Đà Nẵng",
+            "history": [
+                {"date": "17/02/2026", "service": "Post-Acne Recovery Therapy", "status": "Hoàn Thành", "price": "1.200.000"},
+            ]
+        },
+        {
+            "id": 13, 
+            "name": "Vũ Thị Hương", 
+            "gender": "Nữ", 
+            "age": "27",
+            "phone": "0967890123", 
+            "points": "250 điểm",
+            "email": "vu.huong@email.com",
+            "address": "Thanh Khê, TP Đà Nẵng",
+            "history": [
+                {"date": "18/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+            ]
+        },
+        {
+            "id": 14, 
+            "name": "Trịnh Thị Loan", 
+            "gender": "Nữ", 
+            "age": "34",
+            "phone": "0978901234", 
+            "points": "150 điểm",
+            "email": "trinh.loan@email.com",
+            "address": "Hải Châu, TP Đà Nẵng",
+            "history": [
+                {"date": "08/02/2026", "service": "Gội đầu dưỡng sinh", "status": "Hoàn Thành", "price": "300.000"},
+                {"date": "15/02/2026", "service": "Triệt lông công nghệ Diode", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 15, 
+            "name": "Phan Thị Thảo", 
+            "gender": "Nữ", 
+            "age": "28",
+            "phone": "0989012345", 
+            "points": "800 điểm",
+            "email": "phan.thao@email.com",
+            "address": "Sơn Trà, TP Đà Nẵng",
+            "history": [
+                {"date": "20/02/2026", "service": "Massage body thư giãn", "status": "Hoàn Thành", "price": "800.000"},
+                {"date": "25/02/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+            ]
+        },
+        {
+            "id": 16, 
+            "name": "Nguyễn Thanh Huyền", 
+            "gender": "Nữ", 
+            "age": "30",
+            "phone": "0990123456", 
+            "points": "420 điểm",
+            "email": "nguyen.huyen@email.com",
+            "address": "Liên Chiểu, TP Đà Nẵng",
+            "history": [
+                {"date": "14/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+            ]
+        },
+        {
+            "id": 17, 
+            "name": "Hoàng Thị Linh", 
+            "gender": "Nữ", 
+            "age": "26",
+            "phone": "0901111111", 
+            "points": "680 điểm",
+            "email": "hoang.linh@email.com",
+            "address": "Cẩm Lệ, TP Đà Nẵng",
+            "history": [
+                {"date": "13/02/2026", "service": "Gội đầu dưỡng sinh", "status": "Hoàn Thành", "price": "300.000"},
+                {"date": "19/02/2026", "service": "Triệt lông công nghệ Diode", "status": "Hoàn Thành", "price": "800.000"},
+            ]
+        },
+        {
+            "id": 18, 
+            "name": "Phạm Minh Châu", 
+            "gender": "Nữ", 
+            "age": "32",
+            "phone": "0902222222", 
+            "points": "520 điểm",
+            "email": "pham.chau@email.com",
+            "address": "Ngũ Hành Sơn, TP Đà Nẵng",
+            "history": [
+                {"date": "16/02/2026", "service": "Post-Acne Recovery Therapy", "status": "Hoàn Thành", "price": "1.200.000"},
+            ]
+        },
+        {
+            "id": 19, 
+            "name": "Cao Thị Phương", 
+            "gender": "Nữ", 
+            "age": "29",
+            "phone": "0903333333", 
+            "points": "380 điểm",
+            "email": "cao.phuong@email.com",
+            "address": "Thanh Khê, TP Đà Nẵng",
+            "history": [
+                {"date": "17/02/2026", "service": "Chăm sóc da mặt cao cấp", "status": "Hoàn Thành", "price": "1.000.000"},
+            ]
+        },
+        {
+            "id": 20, 
+            "name": "Lê Minh Hiền", 
+            "gender": "Nữ", 
+            "age": "27",
+            "phone": "0904444444", 
+            "points": "620 điểm",
+            "email": "le.hien@email.com",
+            "address": "Hải Châu, TP Đà Nẵng",
+            "history": [
+                {"date": "18/02/2026", "service": "Massage body thư giãn", "status": "Hoàn Thành", "price": "800.000"},
+                {"date": "22/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+            ]
+        },
     ]
     return render(request, "customer_dashboard.html", {"customers": customers})
 
@@ -335,42 +685,104 @@ def customer_detail(request, customer_id):
 
 
 def feedback_dashboard(request):
-    feedbacks = [
-        {
-            "id": 1,
-            "name": "Hương Nguyễn",
-            "time": "3 ngày trước",
-            "service": "Chăm sóc da mặt Collagen",
-            "rating": "5.0",
-            "status": "Đã phản hồi",
-            "status_class": "green",
-            "content": "Mình rất hài lòng với dịch vụ chăm sóc da tại Mai Trâm! Chuyên viên tư vấn rất tận tình, quy trình làm chuyên nghiệp. Da mình sau liệu trình sáng mịn hơn, mụn cũng giảm đáng kể. Không gian cũng rất sang trọng và thư giãn. Chắc chắn sẽ quay lại!",
-            "avatar_class": "avatar-peach",
-        },
-        {
-            "id": 2,
-            "name": "Luyện Đặng",
-            "time": "19/01/2025",
-            "service": "Massage body thư giãn",
-            "rating": "4.0",
-            "status": "Chưa phản hồi",
-            "status_class": "yellow",
-            "content": "Dịch vụ massage rất tốt! Nhân viên massage chuyên nghiệp, lực tay vừa phải. Tinh dầu thơm nhẹ nhàng không gây kích ứng. Sau 60 phút massage, cơ thể mình thư giãn hẳn, giảm đau mỏi vai gáy rất nhiều. Giá cả hợp lý, spa sạch sẽ thoáng mát.",
-            "avatar_class": "avatar-neutral",
-        },
-        {
-            "id": 3,
-            "name": "Tuyết Sương",
-            "time": "1 năm trước",
-            "service": "Triệt lông Laser Diode",
-            "rating": "4.0",
-            "status": "Đã phản hồi",
-            "status_class": "green",
-            "content": "Dịch vụ triệt lông ổn, máy móc hiện đại. Nhân viên tư vấn kỹ về quy trình và số buổi cần thiết. Có điều mình thấy thời gian chờ hơi lâu một chút. Nhưng nhìn chung thì dịch vụ tốt, sau 3 buổi thấy lông mọc thưa hơn hẳn.",
-            "avatar_class": "avatar-rose",
-        },
+    # Dữ liệu mẫu cho các đánh giá
+    names = [
+        "Hương Nguyễn", "Luyện Đặng", "Tuyết Sương", "Linh Phương", "Quỳnh Anh",
+        "Minh Hoa", "Trúc Nhan", "Thanh Vân", "Khuê Ngôn", "Hà Linh",
+        "Tú Anh", "Xuân Hương", "Diệp Chi", "Vân Anh", "Hồng Nhân",
+        "Thảo Vy", "Bảo Anh", "Phương Thảo", "Khánh Linh", "Minh Châu",
+        "Anh Tuấn", "Bảo Ngân", "Châu Giang", "Đức Minh", "Gia Hân",
+        "Hải Yến", "Ích Nhân", "Khắc Quân", "Liêu Phương", "Minh Tú",
+        "Ngân Hà", "Oanh Lê", "Phúc Lâm", "Quốc Trung", "Rin Shimizu",
+        "Sơn Tùng", "Trâm Anh", "Uyên Thy", "Việt Anh", "Vy Kiều",
+        "Thanh Xuân", "Hương Giang", "Mỹ Duyên", "Ngọc Trinh", "Phương Oanh",
+        "Quỳnh Như", "Thủy Tiên", "Vy Oanh", "Xuan Hương", "Yến Nhi"
     ]
-    return render(request, "feedback_dashboard.html", {"feedbacks": feedbacks})
+    
+    services = [
+        "Chăm sóc da mặt cao cấp",
+        "Massage body thư giãn",
+        "Triệt lông công nghệ Diode",
+        "Gội đầu dưỡng sinh",
+        "Trị mụn chuyên sâu",
+        "Acne Detox Therapy",
+        "Post-Acne Recovery Therapy",
+        "Chăm sóc da mặt Collagen",
+        "Triệt lông Laser Diode",
+    ]
+    
+    contents = [
+        "Dịch vụ tuyệt vời! Nhân viên rất chuyên nghiệp và tận tâm. Kết quả vượt mong đợi. Sẽ quay lại nhiều lần nữa!",
+        "Rất hài lòng với dịch vụ. Mình cảm thấy thư giãn và thoải mái. Giá cả hợp lý, nhân viên thân thiện.",
+        "Liệu trình rất hiệu quả. Sau vài buổi, tôi đã thấy kết quả rõ rệt. Chắc chắn sẽ tiếp tục sử dụng.",
+        "Không gian sạch sẽ, thoáng mát. Nhân viên tư vấn kỹ lưỡng. Dịch vụ chất lượng cao, đáng giá tiền.",
+        "Trải nghiệm tuyệt vời! Cảm thấy được chăm sóc kỹ lưỡng. Sẽ giới thiệu cho bạn bè.",
+        "Khá tốt, tuy nhiên cần cải thiện một chút về thái độ phục vụ.",
+        "Dịch vụ bình thường, không có gì nổi bật. Kết quả tạm được.",
+        "Không hài lòng với kết quả. Dù giá khá mắc nhưng hiệu quả không như mong đợi.",
+        "Nhân viên rất chu đáo. Tôi cảm thấy được chúc mừng bởi sự tử tế của họ.",
+        "Liệu trình phục hồi da rất tốt. Làn da tôi sáng mịn hơn rất nhiều.",
+    ]
+    
+    times = [
+        "1 giờ trước", "3 giờ trước", "5 giờ trước", "1 ngày trước", "2 ngày trước",
+        "3 ngày trước", "5 ngày trước", "1 tuần trước", "2 tuần trước", "3 tuần trước",
+        "1 tháng trước", "1.5 tháng trước", "2 tháng trước", "2.5 tháng trước", "3 tháng trước",
+    ]
+    
+    avatar_classes = ["avatar-peach", "avatar-neutral", "avatar-rose", "avatar-sun", "avatar-sea"]
+    
+    # Tạo 120 đánh giá
+    feedbacks = []
+    ratings = [5.0, 5.0, 5.0, 5.0, 4.0, 4.0, 4.0, 3.0, 2.0, 1.0]  # Tỷ lệ: 40% 5-star, 30% 4-star, 10% 3-star, 10% 2-star, 10% 1-star
+    statuses = ["Đã phản hồi", "Chưa phản hồi"]
+    
+    for i in range(1, 121):
+        rating = float(ratings[(i - 1) % len(ratings)])
+        status = statuses[(i - 1) % len(statuses)]
+        status_class = "green" if status == "Đã phản hồi" else "yellow"
+        
+        feedbacks.append({
+            "id": i,
+            "name": names[(i - 1) % len(names)],
+            "time": times[(i - 1) % len(times)],
+            "service": services[(i - 1) % len(services)],
+            "rating": f"{rating}",
+            "status": status,
+            "status_class": status_class,
+            "content": contents[(i - 1) % len(contents)] + f" (Đánh giá #{i})",
+            "avatar_class": avatar_classes[(i - 1) % len(avatar_classes)],
+        })
+    
+    # Tính toán phân phối sao
+    total_reviews = len(feedbacks)
+    star_distribution = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+    total_rating = 0
+    
+    for feedback in feedbacks:
+        rating = int(float(feedback["rating"]))
+        star_distribution[rating] += 1
+        total_rating += float(feedback["rating"])
+    
+    average_rating = round(total_rating / total_reviews, 1) if total_reviews > 0 else 0
+    
+    # Chuẩn bị dữ liệu phân phối sao cho template
+    star_stats = []
+    for star_num in [5, 4, 3, 2, 1]:
+        count = star_distribution[star_num]
+        percentage = (count / total_reviews * 100) if total_reviews > 0 else 0
+        star_stats.append({
+            "star": star_num,
+            "count": count,
+            "percentage": int(percentage)
+        })
+    
+    return render(request, "feedback_dashboard.html", {
+        "feedbacks": feedbacks,
+        "average_rating": average_rating,
+        "total_reviews": total_reviews,
+        "star_stats": star_stats
+    })
 
 
 def get_consultation_data():

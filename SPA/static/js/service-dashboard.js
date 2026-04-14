@@ -247,6 +247,12 @@ if (appointmentRows.length) {
         detailFields.note.textContent = row.dataset.note;
         detailStatus.className = `status-pill ${row.dataset.statusClass}`;
         detailStatus.textContent = row.dataset.status;
+
+        // Set dropdown value
+        const statusSelect = document.querySelector("[data-status-select]");
+        if (statusSelect) {
+            statusSelect.value = row.dataset.status;
+        }
     }
 
     appointmentRows.forEach((row) => {
@@ -255,6 +261,52 @@ if (appointmentRows.length) {
             openModal("appointment-detail-modal");
         });
     });
+
+    // Handle status update
+    const updateStatusBtn = document.querySelector("[data-update-status]");
+    if (updateStatusBtn) {
+        updateStatusBtn.addEventListener("click", () => {
+            const statusSelect = document.querySelector("[data-status-select]");
+            if (!statusSelect) return;
+
+            const newStatus = statusSelect.value;
+            const currentRow = Array.from(appointmentRows).find(row =>
+                row.dataset.customer === detailFields.customer.textContent &&
+                row.dataset.date === detailFields.date.textContent &&
+                row.dataset.time === detailFields.time.textContent
+            );
+
+            if (currentRow) {
+                // Update row data
+                currentRow.dataset.status = newStatus;
+
+                // Update status class based on new status
+                let statusClass = "";
+                if (newStatus === "Hoàn thành") {
+                    statusClass = "green";
+                } else if (newStatus === "Đang tiến hành") {
+                    statusClass = "blue";
+                } else if (newStatus === "Đã hủy") {
+                    statusClass = "red";
+                }
+
+                currentRow.dataset.statusClass = statusClass;
+
+                // Update table cell
+                const statusCell = currentRow.querySelector("td:last-child .status-pill");
+                if (statusCell) {
+                    statusCell.className = `status-pill ${statusClass}`;
+                    statusCell.textContent = newStatus;
+                }
+
+                // Close modal
+                closeAllModals();
+
+                // Show success message
+                alert("Cập nhật trạng thái thành công!");
+            }
+        });
+    }
 
     const initialModal = body.dataset.initialModal;
     if (initialModal === "list-error") {

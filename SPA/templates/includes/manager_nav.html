@@ -1,0 +1,44 @@
+{% with current=request.resolver_match.url_name %}
+<header class="manager-nav">
+    <div class="manager-nav-track">
+        <a class="manager-logo" href="{% url 'service_dashboard' %}" aria-label="MAI TRAM Beauty and Spa">
+            <span class="manager-logo-copy">
+                <strong>MAI TRÂM</strong>
+                <small>Beauty &amp; Spa</small>
+            </span>
+        </a>
+
+        <nav class="manager-nav-center" aria-label="Menu chính">
+            <a class="manager-nav-link{% if current == 'service_dashboard' %} is-active{% endif %}" href="{% url 'service_dashboard' %}">
+                <span>Dịch vụ</span>
+            </a>
+            <a class="manager-nav-link{% if current == 'appointment_dashboard' %} is-active{% endif %}" href="{% url 'appointment_dashboard' %}">
+                <span>Lịch hẹn</span>
+            </a>
+            <a class="manager-nav-link{% if current == 'customer_dashboard' or current == 'customer_detail' %} is-active{% endif %}" href="{% url 'customer_dashboard' %}">
+                <span>Khách hàng</span>
+            </a>
+            <details class="manager-menu-group{% if current == 'feedback_dashboard' or current == 'feedback_detail' or current == 'consultation_dashboard' or current == 'consultation_detail' %} is-active{% endif %}">
+                <summary class="manager-nav-link manager-nav-link--summary">
+                    <span>Phản hồi</span>
+                </summary>
+                <div class="manager-submenu">
+                    <a class="manager-submenu-link{% if current == 'feedback_dashboard' or current == 'feedback_detail' %} is-active{% endif %}" href="{% url 'feedback_dashboard' %}">
+                        Đánh giá
+                    </a>
+                    <a class="manager-submenu-link{% if current == 'consultation_dashboard' or current == 'consultation_detail' %} is-active{% endif %}" href="{% url 'consultation_dashboard' %}">
+                        Tư vấn
+                    </a>
+                </div>
+            </details>
+        </nav>
+
+        <div class="manager-nav-user" aria-label="Người dùng quản lý">
+            <div class="manager-avatar manager-avatar--nav"></div>
+            <div class="manager-nav-user-copy">
+                <strong>Quản lý</strong>
+            </div>
+        </div>
+    </div>
+</header>
+{% endwith %}

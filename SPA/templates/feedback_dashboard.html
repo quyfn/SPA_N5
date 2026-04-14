@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý phản hồi | MAI TRÂM Beauty &amp; Spa</title>
-    <link rel="stylesheet" href="{% static 'css/service-dashboard.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/service-dashboard.css' %}?v=7">
 </head>
 <body>
     <div class="app-shell">
-        <aside class="sidebar">
+        {% include 'includes/manager_nav.html' %}
+        {% comment %}<aside class="sidebar">
             <div class="brand">
                 <h1>MAI TRÂM</h1>
                 <p>Beauty &amp; Spa</p>
@@ -39,7 +40,7 @@
                     <span>Quản lý khách hàng</span>
                 </a>
             </nav>
-        </aside>
+        </aside>{% endcomment %}
 
         <main class="main-content">
             <header class="topbar">
@@ -55,35 +56,63 @@
                 </div>
             </header>
 
-            <section class="stats-grid">
-                <article class="review-stat-card">
-                    <div class="review-stat-icon star"></div>
-                    <strong>4.8</strong>
-                    <span>Đánh giá trung bình</span>
-                </article>
-                <article class="review-stat-card">
-                    <div class="review-stat-icon bubble"></div>
-                    <strong>1.278</strong>
-                    <span>Tổng đánh giá</span>
-                </article>
-                <article class="review-stat-card">
-                    <div class="review-stat-icon home"></div>
-                    <strong>90%</strong>
-                    <span>Khách hàng quay lại</span>
-                </article>
+            <!-- Thanh sao trung bình và phân phối -->
+            <section class="review-summary-section">
+                <div class="review-summary-bar">
+                    <div class="review-stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= average_rating %}
+                                <span class="star-icon">★</span>
+                            {% else %}
+                                <span class="star-icon" style="color: #ddd;">★</span>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="review-average">{{ average_rating }}</span>
+                    </div>
+                    <div class="review-total">{{ total_reviews }} đánh giá</div>
+                </div>
+
+                <!-- Phân phối sao -->
+                <div class="star-distribution">
+                    {% for stat in star_stats %}
+                    <div class="star-row clickable-star" data-filter-star="{{ stat.star }}" style="cursor: pointer; transition: all 0.3s ease;">
+                        <div class="star-label">{{ stat.star }} <span class="star-icon">★</span></div>
+                        <div class="star-bar-container">
+                            <div class="star-bar" style="width: {{ stat.percentage }}%"></div>
+                        </div>
+                        <div class="star-count">{{ stat.count }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
             </section>
 
             <div class="filter-bar">
-                <button class="filter-pill active">Tất cả</button>
-                <button class="filter-pill green">Đã phản hồi</button>
-                <button class="filter-pill yellow">Chưa phản hồi</button>
-                <button class="filter-pill pink">Vi phạm</button>
-                <button class="filter-pill gray" data-modal-target="feedback-empty-modal">Đã xoá</button>
+                <div class="filter-group">
+                    <button class="filter-pill active" data-filter="all">Tất cả</button>
+                    <button class="filter-pill green" data-filter="responded">Đã phản hồi</button>
+                    <button class="filter-pill yellow" data-filter="pending">Chưa phản hồi</button>
+                </div>
+
+                <div class="filter-group service-filter">
+                    <select id="serviceFilter" class="service-select">
+                        <option value="">Tất cả dịch vụ</option>
+                        <option value="Chăm sóc da mặt cao cấp">Chăm sóc da mặt cao cấp</option>
+                        <option value="Massage body thư giãn">Massage body thư giãn</option>
+                        <option value="Triệt lông công nghệ Diode">Triệt lông công nghệ Diode</option>
+                        <option value="Gội đầu dưỡng sinh">Gội đầu dưỡng sinh</option>
+                        <option value="Trị mụn chuyên sâu">Trị mụn chuyên sâu</option>
+                        <option value="Acne Detox Therapy">Acne Detox Therapy</option>
+                        <option value="Post-Acne Recovery Therapy">Post-Acne Recovery Therapy</option>
+                        <option value="Chăm sóc da mặt Collagen">Chăm sóc da mặt Collagen</option>
+                        <option value="Triệt lông Laser Diode">Triệt lông Laser Diode</option>
+                    </select>
+                </div>
             </div>
 
+            <!-- Danh sách đánh giá -->
             <section class="feedback-grid">
                 {% for item in feedbacks %}
-                <article class="feedback-card">
+                <article class="feedback-card" data-status="{% if item.status == 'Đã phản hồi' %}responded{% else %}pending{% endif %}" data-rating="{{ item.rating }}" data-service="{{ item.service }}">
                     <div class="feedback-head">
                         <div class="feedback-avatar {{ item.avatar_class }}"></div>
                         <div>
@@ -92,15 +121,43 @@
                         </div>
                     </div>
                     <div class="feedback-rating">
-                        <span class="stars">★★★★★</span>
+                        <span class="stars">
+                            {% if item.rating == "5.0" %}
+                                ★★★★★
+                            {% elif item.rating == "4.0" %}
+                                ★★★★☆
+                            {% elif item.rating == "3.0" %}
+                                ★★★☆☆
+                            {% elif item.rating == "2.0" %}
+                                ★★☆☆☆
+                            {% elif item.rating == "1.0" %}
+                                ★☆☆☆☆
+                            {% endif %}
+                        </span>
                         <strong>{{ item.rating }}</strong>
                     </div>
                     <div class="service-chip">{{ item.service }}</div>
-                    <p>{{ item.content }}</p>
+                    <p class="feedback-content">
+                        {{ item.content|truncatechars:120 }}
+                        {% if item.content|length > 120 %}
+                        <span class="see-more" onclick="this.parentElement.innerHTML='{{ item.content|escapejs }}'">... Xem thêm</span>
+                        {% endif %}
+                    </p>
                     <div class="feedback-footer">
-                        <span class="status-badge {{ item.status_class }}">{{ item.status }}</span>
+                        {% if item.status == "Đã phản hồi" %}
+                        <span class="status-badge green"><span class="icon-check">✔</span> {{ item.status }}</span>
                         <a class="secondary-btn small-btn" href="{% url 'feedback_detail' item.id %}">Xem</a>
+                        {% else %}
+                        <span class="status-badge yellow"><span class="icon-clock">⏰</span> {{ item.status }}</span>
+                        <button class="secondary-btn small-btn reply-btn" data-feedback-id="{{ item.id }}" data-feedback-name="{{ item.name }}">Phản hồi</button>
+                        {% endif %}
                     </div>
+                    {% if item.status == "Đã phản hồi" and item.reply_content %}
+                    <div style="margin-top: 1rem; padding: 1rem; background: #f0f8f5; border-left: 3px solid #1aaf5d; border-radius: 0.5rem;">
+                        <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #1aaf5d;">Phản hồi từ MAI TRÂM:</p>
+                        <p style="margin: 0; color: #333; line-height: 1.5;">{{ item.reply_content }}</p>
+                    </div>
+                    {% endif %}
                 </article>
                 {% endfor %}
             </section>
@@ -117,6 +174,379 @@
         </div>
     </section>
 
+    <!-- Modal phản hồi đánh giá -->
+    <section class="modal hidden" id="reply-modal" aria-hidden="true">
+        <div class="modal-panel reply-modal-panel">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0;">Phản hồi đánh giá</h3>
+                <button class="modal-close" data-close-modal style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <form id="replyForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Khách hàng</label>
+                    <input type="text" id="customerName" readonly style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 0.5rem; background: #f5f5f5;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Nội dung phản hồi *</label>
+                    <textarea id="replyContent" placeholder="Nhập phản hồi của bạn..." required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 0.5rem; resize: vertical; min-height: 120px; font-family: inherit;"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="secondary-btn" data-close-modal>Hủy</button>
+                    <button type="submit" class="primary-btn">Gửi phản hồi</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <style>
+    .review-summary-section {
+        margin: 2rem 0 1.5rem 0;
+    }
+    .review-summary-bar {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    .review-stars {
+        font-size: 2.2rem;
+        color: #ff5e9c;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+    .review-average {
+        font-size: 1.5rem;
+        color: #222;
+        margin-left: 1rem;
+        font-weight: bold;
+    }
+    .review-total {
+        font-size: 1.1rem;
+        color: #888;
+    }
+    .star-distribution {
+        background: #f9f9f9;
+        border-radius: 0.8rem;
+        padding: 1.5rem;
+        max-width: 400px;
+    }
+    .star-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .star-row:last-child {
+        margin-bottom: 0;
+    }
+    .star-row.clickable-star:hover {
+        background: #e8e8e8;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        padding-left: 1rem;
+    }
+    .star-label {
+        font-weight: 600;
+        color: #222;
+        min-width: 50px;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.95rem;
+    }
+    .star-label .star-icon {
+        font-size: 1.1rem;
+        color: #ff5e9c;
+    }
+    .star-bar-container {
+        flex: 1;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .star-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #ff5e9c, #ff8fb3);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    .star-count {
+        font-size: 0.9rem;
+        color: #666;
+        min-width: 40px;
+        text-align: right;
+    }
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        align-items: center;
+    }
+    .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .service-select {
+        padding: 0.6rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        background: white;
+        transition: all 0.3s ease;
+    }
+    .service-select:hover,
+    .service-select:focus {
+        border-color: #ff5e9c;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 94, 156, 0.1);
+    }
+    .feedback-content {
+        position: relative;
+        margin-bottom: 0.5rem;
+        min-height: 2.5em;
+    }
+    .see-more {
+        color: #ff5e9c;
+        cursor: pointer;
+        font-weight: 500;
+        margin-left: 0.5em;
+    }
+    .status-badge.green {
+        background: #e6f9e6;
+        color: #1aaf5d;
+        border-radius: 1em;
+        padding: 0.2em 0.8em;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+    }
+    .status-badge.yellow {
+        background: #fffbe6;
+        color: #e6a700;
+        border-radius: 1em;
+        padding: 0.2em 0.8em;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+    }
+    .icon-check { color: #1aaf5d; font-size: 1.1em; }
+    .icon-clock { color: #e6a700; font-size: 1.1em; }
+    .reply-btn {
+        background: #ff5e9c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .reply-btn:hover {
+        background: #ff3d7f;
+        transform: translateY(-2px);
+    }
+    /* Modal Popup - FIXED CENTER */
+    #reply-modal {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        z-index: 9999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    #reply-modal.hidden {
+        display: none !important;
+    }
+    #reply-modal .modal-panel {
+        background: white !important;
+        border-radius: 1rem !important;
+        padding: 2rem !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+        animation: slideUp 0.3s ease forwards !important;
+        box-sizing: border-box !important;
+        width: 90% !important;
+        max-width: 500px !important;
+        margin: 0 !important;
+    }
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    .modal-close {
+        font-size: 2rem;
+        color: #999;
+    }
+    </style>
     <script src="{% static 'js/service-dashboard.js' %}?v=6"></script>
+
+    <script>
+    // Hàm lọc đánh giá
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-pill[data-filter]');
+        const serviceFilter = document.getElementById('serviceFilter');
+        const starRows = document.querySelectorAll('.clickable-star');
+        const feedbackCards = document.querySelectorAll('.feedback-card');
+        const replyButtons = document.querySelectorAll('.reply-btn');
+        const replyModal = document.getElementById('reply-modal');
+        const replyForm = document.getElementById('replyForm');
+        const customerNameInput = document.getElementById('customerName');
+        const replyContentInput = document.getElementById('replyContent');
+        let currentFeedbackId = null;
+
+        // State filter
+        let activeStatusFilter = 'all';
+        let activeServiceFilter = '';
+        let activeStarFilter = null;
+
+        // Hàm lọc chính
+        function applyFilters() {
+            feedbackCards.forEach(card => {
+                let show = true;
+
+                // Lọc theo trạng thái
+                if (activeStatusFilter === 'responded') {
+                    show = show && card.getAttribute('data-status') === 'responded';
+                } else if (activeStatusFilter === 'pending') {
+                    show = show && card.getAttribute('data-status') === 'pending';
+                }
+
+                // Lọc theo dịch vụ
+                if (activeServiceFilter) {
+                    show = show && card.getAttribute('data-service') === activeServiceFilter;
+                }
+
+                // Lọc theo số sao
+                if (activeStarFilter) {
+                    show = show && card.getAttribute('data-rating') === activeStarFilter;
+                }
+
+                card.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Lọc theo trạng thái
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                activeStatusFilter = this.getAttribute('data-filter');
+                activeStarFilter = null; // Reset star filter
+
+                // Cập nhật nút active
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                applyFilters();
+            });
+        });
+
+        // Lọc theo dịch vụ
+        serviceFilter.addEventListener('change', function() {
+            activeServiceFilter = this.value;
+            activeStarFilter = null; // Reset star filter
+            applyFilters();
+        });
+
+        // Lọc theo số sao
+        starRows.forEach(row => {
+            row.addEventListener('click', function() {
+                const star = this.getAttribute('data-filter-star');
+                activeStarFilter = star + '.0';
+                activeStatusFilter = 'all';
+                activeServiceFilter = '';
+
+                // Reset filter buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                filterButtons[0].classList.add('active'); // Set "Tất cả" active
+
+                // Reset service filter
+                serviceFilter.value = '';
+
+                applyFilters();
+            });
+        });
+
+        // Phản hồi đánh giá
+        replyButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentFeedbackId = this.getAttribute('data-feedback-id');
+                const customerName = this.getAttribute('data-feedback-name');
+
+                customerNameInput.value = customerName;
+                replyContentInput.value = '';
+
+                // Hiển thị modal
+                replyModal.classList.remove('hidden');
+            });
+        });
+
+        // Đóng modal khi ấn hủy
+        document.querySelectorAll('[data-close-modal]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                replyModal.classList.add('hidden');
+                replyForm.reset();
+            });
+        });
+
+        // Gửi phản hồi
+        replyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const replyContent = replyContentInput.value;
+
+            if (!replyContent.trim()) {
+                alert('Vui lòng nhập nội dung phản hồi');
+                return;
+            }
+
+            // Tìm thẻ feedback-card và cập nhật
+            const feedbackCard = document.querySelector(`[data-feedback-id="${currentFeedbackId}"]`)?.closest('.feedback-card');
+            if (feedbackCard) {
+                // Cập nhật status
+                feedbackCard.setAttribute('data-status', 'responded');
+
+                // Cập nhật HTML
+                const footer = feedbackCard.querySelector('.feedback-footer');
+                footer.innerHTML = `
+                    <span class="status-badge green"><span class="icon-check">✔</span> Đã phản hồi</span>
+                    <a class="secondary-btn small-btn" href="/phan-hoi/${currentFeedbackId}/">Xem</a>
+                `;
+
+                // Thêm phần hiển thị phản hồi
+                const replyDiv = document.createElement('div');
+                replyDiv.style.cssText = 'margin-top: 1rem; padding: 1rem; background: #f0f8f5; border-left: 3px solid #1aaf5d; border-radius: 0.5rem;';
+                replyDiv.innerHTML = `
+                    <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #1aaf5d;">Phản hồi từ MAI TRÂM:</p>
+                    <p style="margin: 0; color: #333; line-height: 1.5;">${replyContent}</p>
+                `;
+                feedbackCard.appendChild(replyDiv);
+            }
+
+            // Đóng modal
+            replyModal.classList.add('hidden');
+            replyForm.reset();
+            alert('Gửi phản hồi thành công!');
+        });
+    });
+    </script>
 </body>
 </html>

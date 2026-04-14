@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới Thiệu - SPA MAI TRÂM</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-flex">
+            <a href="{% url 'about_page' %}" class="logo-block">
+                <div class="logo-title">MAI TRÂM</div>
+                <div class="logo-sub">Beauty & Spa</div>
+            </a>
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="#dich-vu">Dịch vụ</a></li>
+                    <li><a href="#tu-van">Tư vấn</a></li>
+                    <li><a href="{% url 'public_review_page' %}">Đánh giá</a></li>
+                    <li><a href="{% url 'user_login' %}">Tài khoản</a></li>
+                </ul>
+            </nav>
+            <a href="#dat-lich" class="btn-book">Đặt lịch hẹn</a>
+        </div>
+    </header>
+    <section class="spa-banner">
+        <div class="banner-overlay"></div>
+        <div class="banner-content">
+            <h1>Giới Thiệu Về SPA MAI TRÂM</h1>
+            <p>Không gian thư giãn, chăm sóc sắc đẹp và sức khỏe toàn diện</p>
+        </div>
+    </section>
+    <main class="spa-main">
+        <div class="container main-content">
+            <!-- Section 1: About -->
+            <section class="about-section">
+                <div class="section-grid">
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&h=400&fit=crop" alt="Không gian spa" class="responsive-img">
+                    </div>
+                    <div class="about-text">
+                        <h2>Về Chúng Tôi</h2>
+                        <p>SPA MAI TRÂM là điểm đến lý tưởng cho những ai mong muốn tìm lại sự cân bằng, thư giãn và làm đẹp. Chúng tôi tự hào mang đến dịch vụ chuyên nghiệp, không gian sang trọng và đội ngũ nhân viên tận tâm.</p>
+                        <ul class="feature-list">
+                            <li><span class="check-icon">✓</span> Không gian hiện đại, đậm chất thiên nhiên</li>
+                            <li><span class="check-icon">✓</span> Đội ngũ kỹ thuật viên giàu kinh nghiệm</li>
+                            <li><span class="check-icon">✓</span> Liệu trình đa dạng, phù hợp mọi nhu cầu</li>
+                            <li><span class="check-icon">✓</span> Cam kết chất lượng và sự hài lòng</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Mission -->
+            <section class="mission-section">
+                <h2>Sứ Mệnh & Giá Trị Cốt Lõi</h2>
+                <p class="mission-desc">Spa Mai Trâm hướng tới việc chăm sóc sức khỏe và sắc đẹp toàn diện cho khách hàng bằng các liệu trình hiện đại, an toàn, kết hợp tinh hoa truyền thống và công nghệ mới nhất.</p>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">🎯</div>
+                        <h3>Chuyên Nghiệp</h3>
+                        <p>Đội ngũ được đào tạo quốc tế với kinh nghiệm 10+ năm</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">💎</div>
+                        <h3>Chất Lượng</h3>
+                        <p>Sử dụng sản phẩm cao cấp từ các thương hiệu hàng đầu</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">❤️</div>
+                        <h3>Tận Tâm</h3>
+                        <p>Lắng nghe và hiểu nhu cầu của từng khách hàng</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">🌟</div>
+                        <h3>Hiệu Quả</h3>
+                        <p>Kết quả rõ rệt sau từng liệu trình chăm sóc</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Services Preview -->
+            <section class="services-preview-section" id="dich-vu">
+                <h2>Dịch Vụ Nổi Bật</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <img src="https://images.unsplash.com/photo-1596760316670-07e29f0fba92?w=300&h=250&fit=crop" alt="Chăm sóc da mặt" class="service-img">
+                        <h3>Chăm Sóc Da Mặt</h3>
+                        <p>Liệu trình chuyên sâu với công nghệ cao cấp</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="https://images.unsplash.com/photo-1570172619644-dfd03cb5f913?w=300&h=250&fit=crop" alt="Massage body" class="service-img">
+                        <h3>Massage Body</h3>
+                        <p>Thư giãn cơ thể, giải stress hiệu quả</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=300&h=250&fit=crop" alt="Triệt lông" class="service-img">
+                        <h3>Triệt Lông Vĩnh Viễn</h3>
+                        <p>Công nghệ laser an toàn cho da</p>
+                    </div>
+                    <div class="service-card">
+                        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=300&h=250&fit=crop" alt="Tắm trắng" class="service-img">
+                        <h3>Tắm Trắng Toàn Thân</h3>
+                        <p>Da sáng mịn, khỏe mạnh tự nhiên</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: CTA -->
+            <section class="mission-section" id="tu-van">
+                <h2>Tư Vấn Nhanh</h2>
+                <p class="mission-desc">Các trang chức năng riêng chưa được tạo đầy đủ, nên menu hiện được nối về các khu vực ngay trên trang chủ để người dùng vẫn thao tác được.</p>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">💬</div>
+                        <h3>Tư vấn dịch vụ</h3>
+                        <p>Gợi ý liệu trình phù hợp theo nhu cầu chăm sóc da, thư giãn và phục hồi.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">📅</div>
+                        <h3>Hẹn lịch nhanh</h3>
+                        <p>Chọn dịch vụ trước, sau đó liên hệ spa để chốt thời gian phù hợp.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">✨</div>
+                        <h3>Chăm sóc tại nhà</h3>
+                        <p>Nhận tư vấn cơ bản để duy trì hiệu quả giữa các lần sử dụng dịch vụ.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="services-preview-section" id="danh-gia">
+                <h2>Đánh Giá Khách Hàng</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Ngọc Anh</h3>
+                        <p>"Không gian thư giãn, nhân viên nhẹ nhàng và tư vấn rất rõ ràng."</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Khánh Linh</h3>
+                        <p>"Liệu trình gội đầu dưỡng sinh dễ chịu, sau buổi làm thấy rất thoải mái."</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Thu Hằng</h3>
+                        <p>"Chăm sóc da ổn, quy trình gọn và sạch. Mình sẽ quay lại lần sau."</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta-section" id="dat-lich">
+                <div class="cta-content">
+                    <h2>Sẵn Sàng Chăm Sóc Bản Thân?</h2>
+                    <p>Đặt lịch hẹn ngay hôm nay và nhận ưu đãi đặc biệt cho khách hàng mới</p>
+                    <a href="{% url 'appointment_dashboard' %}" class="btn-cta">Đặt Lịch Hẹn Ngay</a>
+                </div>
+            </section>
+            <!-- Section 5: Gallery -->
+            <section class="gallery-section">
+                <h2>Khung Cảnh Đẹp Tại Mai Trâm</h2>
+                <p class="gallery-desc">Trải nghiệm không gian spa sang trọng, hiện đại với trang thiết bị cao cấp</p>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=400&q=80" alt="Phòng xông hơi">
+                        <h3>Phòng Xông Hơi</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1544367567-0d6fcffe7bf7?auto=format&fit=crop&w=400&q=80" alt="Bồn tắm sang trọng">
+                        <h3>Bồn Tắm Sang Trọng</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?auto=format&fit=crop&w=400&q=80" alt="Phòng trị liệu">
+                        <h3>Phòng Trị Liệu</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1609571181821-7cf5a9dbab5e?auto=format&fit=crop&w=400&q=80" alt="Khu thư giãn">
+                        <h3>Khu Thư Giãn Relax</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1514432324607-2e2be1dbc3e7?auto=format&fit=crop&w=400&q=80" alt="Massage room">
+                        <h3>Phòng Massage Thế Hệ Mới</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1585857612519-7e07e76711ba?auto=format&fit=crop&w=400&q=80" alt="Bộ sản phẩm chăm sóc">
+                        <h3>Sản Phẩm Chăm Sóc Premium</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=400&q=80" alt="Spa treatment">
+                        <h3>Liệu Trình Chăm Sóc</h3>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=400&q=80" alt="Không gian chung">
+                        <h3>Không Gian Tiếp Khách</h3>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="footer-flex">
+            <div class="footer-col">
+                <div class="footer-title">Mai Trâm Spa</div>
+                <div class="footer-desc">
+                    Nơi vẻ đẹp thăng hoa - Chăm sóc sắc đẹp toàn diện với công nghệ hiện đại và đội ngũ chuyên gia hàng đầu.
+                </div>
+                <div class="footer-social">
+                    <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook"></a>
+                    <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram"></a>
+                    <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter"></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <div class="footer-title">Dịch vụ</div>
+                <ul>
+                    <li>Chăm sóc da mặt</li>
+                    <li>Massage body</li>
+                    <li>Triệt lông</li>
+                    <li>Điều trị mụn</li>
+                    <li>Tắm trắng</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <div class="footer-title">Về chúng tôi</div>
+                <ul>
+                    <li>Giới thiệu</li>
+                    <li>Đội ngũ</li>
+                    <li>Tin tức</li>
+                    <li>Liên hệ</li>
+                    <li>Tuyển dụng</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <div class="footer-title">Liên hệ</div>
+                <ul>
+                    <li><span class="footer-icon">📍</span> 104/7 Lê Đình Lý, Thanh Khê, Đà Nẵng</li>
+                    <li><span class="footer-icon">📞</span> 0901 234 589</li>
+                    <li><span class="footer-icon">✉️</span> info@maitram.spa</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

@@ -1,4 +1,145 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .forms import LoginForm, RegisterForm
+
+
+def get_public_reviews():
+    return [
+        {
+            "name": "Nguyễn Hà My",
+            "time": "2 ngày trước",
+            "rating": 5,
+            "service": "Chăm sóc da mặt chuyên sâu",
+            "content": "Không gian spa sang và thoáng. Kỹ thuật viên soi da kỹ, làm rất nhẹ tay và tư vấn routine sau liệu trình rõ ràng. Da mình đều màu và mềm hơn chỉ sau một buổi.",
+            "image_urls": [
+                "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
+            ],
+        },
+        {
+            "name": "Trần Khánh Linh",
+            "time": "5 ngày trước",
+            "rating": 5,
+            "service": "Gội đầu dưỡng sinh",
+            "content": "Mùi tinh dầu dễ chịu, phòng làm việc sạch và yên tĩnh. Phần massage đầu vai gáy rất đã, đúng kiểu dịch vụ để quay lại sau những ngày làm việc căng thẳng.",
+            "image_urls": [],
+        },
+        {
+            "name": "Lê Bảo Ngọc",
+            "time": "1 tuần trước",
+            "rating": 4,
+            "service": "Post-Acne Recovery Therapy",
+            "content": "Liệu trình phục hồi sau mụn làm mình hài lòng. Độ đỏ giảm rõ, da được hướng dẫn chăm sóc tại nhà khá chi tiết. Nếu có thêm gói combo thì sẽ rất hợp lý.",
+            "image_urls": [
+                "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80",
+            ],
+        },
+        {
+            "name": "Phạm Thu Hằng",
+            "time": "2 tuần trước",
+            "rating": 5,
+            "service": "Massage body thư giãn",
+            "content": "Phòng hương nhẹ, nhạc vừa đủ và thao tác rất chuyên nghiệp. Sau 60 phút massage mình thấy cơ thể được thả lỏng hoàn toàn. Trải nghiệm đồng đều từ lúc check-in đến lúc ra về.",
+            "image_urls": [],
+        },
+        {
+            "name": "Võ Minh Anh",
+            "time": "3 tuần trước",
+            "rating": 4,
+            "service": "Triệt lông công nghệ Diode",
+            "content": "Máy móc mới, nhân viên giải thích quy trình kỹ và nhắc lịch tái khám đầy đủ. Lần đầu hơi hồi hộp nhưng làm xong thấy yên tâm. Hiệu quả cần thêm vài buổi nữa để đánh giá trọn vẹn.",
+            "image_urls": [
+                "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+            ],
+        },
+        {
+            "name": "Đoàn Ngọc Thảo",
+            "time": "1 tháng trước",
+            "rating": 5,
+            "service": "Acne Detox Therapy",
+            "content": "Mình đánh giá cao cách spa theo dõi da trước và sau buổi trị liệu. Phong cách phục vụ lịch sự, sạch sẽ và không bị tạo cảm giác bán hàng quá đà. Sẽ giới thiệu thêm bạn bè.",
+            "image_urls": [],
+        },
+    ]
+
+
+def user_login(request):
+    """Xử lý đăng nhập người dùng"""
+    if request.user.is_authenticated:
+        # Nếu là admin/staff, vào service_dashboard
+        if request.user.is_staff:
+            return redirect('service_dashboard')
+        # Nếu là người dùng thường, vào customer_dashboard
+        return redirect('about_page')
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            try:
+                user = User.objects.get(email=email)
+                user = authenticate(request, username=user.username, password=password)
+
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, f'Chào mừng {user.first_name or user.username}!')
+                    # Nếu là admin/staff, vào service_dashboard
+                    if user.is_staff:
+                        return redirect('service_dashboard')
+                    # Nếu là người dùng thường, vào customer_dashboard
+                    return redirect('about_page')
+                else:
+                    messages.error(request, 'Mật khẩu không chính xác.')
+            except User.DoesNotExist:
+                messages.error(request, 'Email này không tồn tại.')
+
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
+def user_register(request):
+    """Xử lý đăng ký tài khoản người dùng"""
+    if request.user.is_authenticated:
+        # Nếu là admin/staff, vào service_dashboard
+        if request.user.is_staff:
+            return redirect('service_dashboard')
+        # Nếu là người dùng thường, vào customer_dashboard
+        return redirect('about_page')
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = form.cleaned_data.get('email')
+            user.save()
+
+            messages.success(request, 'Đăng ký thành công! Vui lòng đăng nhập.')
+            return redirect('user_login')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{error}')
+
+    else:
+        form = RegisterForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+def user_logout(request):
+    """Xử lý đăng xuất"""
+    logout(request)
+    messages.success(request, 'Bạn đã đăng xuất thành công!')
+    return redirect('user_login')
 
 
 def service_dashboard(request):
@@ -361,3 +502,24 @@ def feedback_detail(request, feedback_id):
         "content": "Dịch vụ massage rất tốt! Nhân viên massage chuyên nghiệp, lực tay vừa phải. Tinh dầu thơm nhẹ nhàng không gây kích ứng. Sau 60 phút massage, cơ thể mình thư giãn hẳn, giảm đau mỏi vai gáy rất nhiều. Giá cả hợp lý, spa sạch sẽ thoáng mát.",
     }
     return render(request, "feedback_detail.html", {"feedback": feedback})
+
+
+def about_page(request):
+    return render(request, 'about.html')
+
+
+def public_review_page(request):
+    reviews = get_public_reviews()
+    average_rating = round(sum(item["rating"] for item in reviews) / len(reviews), 1) if reviews else 0
+    total_reviews = 120
+    with_images = sum(1 for item in reviews if item["image_urls"])
+    highlighted_reviews = reviews[:3]
+
+    context = {
+        "reviews": reviews,
+        "highlighted_reviews": highlighted_reviews,
+        "average_rating": average_rating,
+        "total_reviews": total_reviews,
+        "with_images": with_images,
+    }
+    return render(request, "public_reviews.html", context)

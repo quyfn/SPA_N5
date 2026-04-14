@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xem Trước - Hệ Thống Đăng Nhập & Đăng Ký Spa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .preview-content {
+            padding: 30px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .url-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .url-list li {
+            padding: 10px;
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .url-list strong {
+            color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-weight: 600;
+            color: #333;
+        }
+
+        table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .button-demo {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s;
+        }
+
+        .button-demo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .color-box {
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-box.primary {
+            background: #667eea;
+        }
+
+        .color-box.secondary {
+            background: #764ba2;
+        }
+
+        .color-box.success {
+            background: #28a745;
+        }
+
+        .color-box.error {
+            background: #f5222d;
+        }
+
+        .color-box span {
+            display: block;
+            font-size: 12px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .status-badge.new {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.updated {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        @media (max-width: 768px) {
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Hệ Thống Đăng Nhập & Đăng Ký - SPA Thư Giãn</h1>
+
+        <!-- Main Features -->
+        <div class="preview-grid">
+            <!-- Login Features -->
+            <div class="preview-card">
+                <div class="preview-title">🔐 Tính Năng Đăng Nhập</div>
+                <div class="preview-content">
+                    <ul class="feature-list">
+                        <li>Email + Mật khẩu</li>
+                        <li>Ghi nhớ tôi</li>
+                        <li>Quên mật khẩu (sẵn sàng)</li>
+                        <li>Đăng nhập qua mạng xã hội</li>
+                        <li>Flash messages</li>
+                        <li>Responsive design</li>
+                        <li>CSRF protection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Register Features -->
+            <div class="preview-card">
+                <div class="preview-title">📝 Tính Năng Đăng Ký</div>
+                <div class="preview-content">
+                    <ul class="feature-list">
+                        <li>Xác thực mật khẩu mạnh</li>
+                        <li>Kiểm tra email duy nhất</li>
+                        <li>Tên + Họ + Email</li>
+                        <li>Hiển thị yêu cầu mật khẩu</li>
+                        <li>Xác nhận điều khoản</li>
+                        <li>Xác thực dữ liệu tự động</li>
+                        <li>Thông báo lỗi chi tiết</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- URLs Info -->
+        <div class="info-section">
+            <h2>🌐 URLs & Endpoints</h2>
+            <ul class="url-list">
+                <li><strong>/login/</strong> - Trang đăng nhập <span class="status-badge updated">CẬP NHẬT</span></li>
+                <li><strong>/register/</strong> - Trang đăng ký <span class="status-badge new">MỚI</span></li>
+                <li><strong>/logout/</strong> - Xử lý đăng xuất <span class="status-badge new">MỚI</span></li>
+                <li><strong>/</strong> - Trang chủ dịch vụ</li>
+                <li><strong>/lich-hen/</strong> - Lịch hẹn</li>
+                <li><strong>/khach-hang/</strong> - Khách hàng</li>
+            </ul>
+        </div>
+
+        <!-- Files Created -->
+        <div class="info-section">
+            <h2>📁 Files Được Tạo/Cập Nhật</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Trạng Thái</th>
+                        <th>Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SPA/forms.py</td>
+                        <td><span class="status-badge new">MỚI</span></td>
+                        <td>Form đăng nhập & đăng ký</td>
+                    </tr>
+                    <tr>
+                        <td>SPA/views.py</td>
+                        <td><span class="status-badge updated">CẬP NHẬT</span></td>
+                        <td>Views: user_login, user_register, user_logout</td>
+                    </tr>
+                    <tr>
+                        <td>SPA/urls.py</td>
+                        <td><span class="status-badge updated">CẬP NHẬT</span></td>
+                        <td>URLs cho auth endpoints</td>
+                    </tr>
+                    <tr>
+                        <td>templates/login.html</td>
+                        <td><span class="status-badge new">MỚI</span></td>
+                        <td>Template trang đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td>templates/register.html</td>
+                        <td><span class="status-badge new">MỚI</span></td>
+                        <td>Template trang đăng ký</td>
+                    </tr>
+                    <tr>
+                        <td>static/css/auth.css</td>
+                        <td><span class="status-badge new">MỚI</span></td>
+                        <td>Stylesheet bổ sung</td>
+                    </tr>
+                    <tr>
+                        <td>SPA/settings.py</td>
+                        <td><span class="status-badge updated">CẬP NHẬT</span></td>
+                        <td>Messages & i18n config</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Color Palette -->
+        <div class="info-section">
+            <h2>🎨 Bảng Màu Sắc</h2>
+            <div class="color-palette">
+                <div class="color-box primary">
+                    Primary
+                    <span>#667eea</span>
+                </div>
+                <div class="color-box secondary">
+                    Secondary
+                    <span>#764ba2</span>
+                </div>
+                <div class="color-box success">
+                    Success
+                    <span>#28a745</span>
+                </div>
+                <div class="color-box error">
+                    Error
+                    <span>#f5222d</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="info-section">
+            <h2>🚀 Bắt Đầu Nhanh</h2>
+
+            <h3 style="margin-top: 20px; color: #333;">1. Chạy Django Server:</h3>
+            <div class="code-block">
+cd C:\Users\LENOVO\PycharmProjects\DjangoProject1\LAPTRINHWEB\SPA
+python manage.py runserver
+            </div>
+
+            <h3 style="margin-top: 20px; color: #333;">2. Truy Cập Trang:</h3>
+            <div class="code-block">
+http://localhost:8000/register/   # Đăng ký
+http://localhost:8000/login/      # Đăng nhập
+            </div>
+
+            <h3 style="margin-top: 20px; color: #333;">3. Điền Thông Tin Demo:</h3>
+            <table>
+                <tr>
+                    <th>Trường</th>
+                    <th>Giá Trị</th>
+                </tr>
+                <tr>
+                    <td>Tên</td>
+                    <td>Nguyễn</td>
+                </tr>
+                <tr>
+                    <td>Họ</td>
+                    <td>Văn A</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>nguyenvana@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mật khẩu</td>
+                    <td>Password123</td>
+                </tr>
+                <tr>
+                    <td>Xác nhận Mật khẩu</td>
+                    <td>Password123</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Validation Rules -->
+        <div class="info-section">
+            <h2>✅ Quy Tắc Xác Thực</h2>
+
+            <h3 style="color: #333; margin-top: 15px;">Email:</h3>
+            <ul style="margin-left: 20px;">
+                <li>✓ Phải là email hợp lệ</li>
+                <li>✓ Không được trùng lặp</li>
+                <li>✓ Bắt buộc</li>
+            </ul>
+
+            <h3 style="color: #333; margin-top: 15px;">Mật Khẩu:</h3>
+            <ul style="margin-left: 20px;">
+                <li>✓ Ít nhất 8 ký tự</li>
+                <li>✓ Không toàn số</li>
+                <li>✓ Không trùng với email/username</li>
+                <li>✓ Phải khớp khi xác nhận</li>
+            </ul>
+
+            <h3 style="color: #333; margin-top: 15px;">Tên/Họ:</h3>
+            <ul style="margin-left: 20px;">
+                <li>✓ Bắt buộc</li>
+                <li>✓ Tối đa 150 ký tự</li>
+            </ul>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="info-section">
+            <h2>⚙️ Tính Năng Nâng Cao (Sẵn Sàng)</h2>
+            <ul class="feature-list">
+                <li>Xác thực email (Email verification)</li>
+                <li>Quên mật khẩu (Password reset)</li>
+                <li>Xác thực 2 yếu tố (2FA)</li>
+                <li>Đăng nhập mạng xã hội</li>
+                <li>Trang cá nhân (User profile)</li>
+                <li>API endpoints (REST)</li>
+            </ul>
+        </div>
+
+        <!-- Support -->
+        <div class="info-section">
+            <h2>📞 Hỗ Trợ</h2>
+            <p style="margin-bottom: 15px;">Nếu gặp vấn đề, vui lòng kiểm tra:</p>
+            <table>
+                <tr>
+                    <th>Vấn Đề</th>
+                    <th>Giải Pháp</th>
+                </tr>
+                <tr>
+                    <td>Server không chạy</td>
+                    <td>cd vào thư mục SPA trước, kiểm tra port 8000</td>
+                </tr>
+                <tr>
+                    <td>404 Not Found</td>
+                    <td>Kiểm tra URL, templates có ở đúng thư mục?</td>
+                </tr>
+                <tr>
+                    <td>Form không hiển thị</td>
+                    <td>Refresh (Ctrl+F5), kiểm tra browser console</td>
+                </tr>
+                <tr>
+                    <td>Lỗi Database</td>
+                    <td>python manage.py migrate</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin-bottom: 10px;">✨ <strong>Tạo bởi GitHub Copilot</strong> ✨</p>
+            <p>Ngày: 14/04/2026 | Version 1.0</p>
+            <p style="margin-top: 15px;">
+                <button class="button-demo" onclick="alert('Để chạy, vui lòng truy cập http://localhost:8000/login/')">
+                    ▶️ Chạy Hệ Thống
+                </button>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

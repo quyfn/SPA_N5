@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import (
+    user_login,
+    user_register,
+    user_logout,
     appointment_dashboard,
     consultation_dashboard,
     consultation_detail,
@@ -26,9 +29,14 @@ from .views import (
     feedback_dashboard,
     feedback_detail,
     service_dashboard,
+    about_page,
+    public_review_page,
 )
 
 urlpatterns = [
+    path('login/', user_login, name='user_login'),
+    path('register/', user_register, name='user_register'),
+    path('logout/', user_logout, name='user_logout'),
     path('', service_dashboard, name='service_dashboard'),
     path('lich-hen/', appointment_dashboard, name='appointment_dashboard'),
     path('phan-hoi/', feedback_dashboard, name='feedback_dashboard'),
@@ -37,5 +45,7 @@ urlpatterns = [
     path('phan-hoi/<int:feedback_id>/', feedback_detail, name='feedback_detail'),
     path('khach-hang/', customer_dashboard, name='customer_dashboard'),
     path('khach-hang/<int:customer_id>/', customer_detail, name='customer_detail'),
+    path('gioi-thieu/', about_page, name='about_page'),
+    path('danh-gia/', public_review_page, name='public_review_page'),
     path('admin/', admin.site.urls),
 ]

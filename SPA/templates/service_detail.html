@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ service.name }} | Mai Trâm Spa</title>
+    <link rel="stylesheet" href="{% static 'css/see_service.css' %}?v=2">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="header">
+            <a class="logo" href="{% url 'see_service' %}">
+                <h1>MAI TRÂM</h1>
+                <span>Beauty &amp; Spa</span>
+            </a>
+
+            <nav class="nav">
+                <a class="active" href="{% url 'see_service' %}">Dịch vụ</a>
+                <a href="{% url 'consultation_dashboard' %}">Tư vấn</a>
+                <a href="{% url 'feedback_dashboard' %}">Đánh giá</a>
+                <a href="{% url 'customer_account' %}">Tài khoản</a>
+            </nav>
+
+            <a class="btn-book" href="{% url 'appointment_dashboard' %}">Đặt lịch hẹn</a>
+        </header>
+
+        <main class="main-content detail-main">
+            <section class="detail-hero">
+                <img class="detail-image" src="{{ service.image_url }}" alt="{{ service.name }}">
+                <div class="detail-copy">
+                    <a class="back-link" href="{% url 'see_service' %}">&larr; Quay lại danh sách</a>
+                    <span class="detail-badge">{{ service.category_label }}</span>
+                    <h2>{{ service.name }}</h2>
+                    <p class="detail-description">{{ service.description }}</p>
+
+                    <div class="detail-meta">
+                        <div>
+                            <strong>{{ service.price_label }}đ</strong>
+                            <span>Giá dịch vụ</span>
+                        </div>
+                        <div>
+                            <strong>{{ service.duration_minutes }} phút</strong>
+                            <span>Thời lượng</span>
+                        </div>
+                        <div>
+                            <strong>{{ service.rating }}</strong>
+                            <span>Đánh giá</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-actions">
+                        <a class="btn-book" href="{% url 'appointment_dashboard' %}">Đặt lịch ngay</a>
+                        <a class="secondary-link" href="{% url 'consultation_dashboard' %}">Nhận tư vấn</a>
+                    </div>
+                </div>
+            </section>
+
+            {% if related_services %}
+            <section class="related-section">
+                <div class="section-heading">
+                    <h3>Dịch vụ liên quan</h3>
+                    <a href="{% url 'see_service' %}">Xem tất cả</a>
+                </div>
+                <div class="services compact-services">
+                    {% for item in related_services %}
+                    <article class="card" data-category="{{ item.category }}" data-price="{{ item.price }}" data-name="{{ item.name }}">
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                        <div class="card-body">
+                            <div class="card-head">
+                                <h3>{{ item.name }}</h3>
+                                <span class="rating">&#9733; {{ item.rating }}</span>
+                            </div>
+                            <p class="description">{{ item.short_description }}</p>
+                            <div class="meta">
+                                <span>{{ item.duration_minutes }} phút</span>
+                            </div>
+                            <div class="card-footer">
+                                <strong>Từ {{ item.price_label }}đ</strong>
+                                <a href="{% url 'service_detail' item.slug %}">Xem chi tiết <span>&rarr;</span></a>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

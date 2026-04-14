@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tài khoản | Mai Trâm Spa</title>
+    <link rel="stylesheet" href="{% static 'css/customer-account.css' %}?v=2">
+</head>
+<body>
+    <div class="account-shell">
+        <aside class="sidebar">
+            <a class="brand" href="{% url 'about_page' %}">
+                <span class="brand-title">MAI TRÂM</span>
+                <span class="brand-subtitle">Beauty &amp; Spa</span>
+            </a>
+
+            <nav class="sidebar-menu">
+                <a class="sidebar-link {% if active_tab == 'profile' %}active{% endif %}" href="{% url 'customer_account' %}?tab=profile">
+                    <span class="sidebar-icon">◔</span>
+                    <span>Thông tin cá nhân</span>
+                </a>
+                <a class="sidebar-link {% if active_tab == 'history' %}active{% endif %}" href="{% url 'customer_account' %}?tab=history">
+                    <span class="sidebar-icon">◷</span>
+                    <span>Lịch sử dịch vụ</span>
+                </a>
+                <a class="sidebar-link {% if active_tab == 'points' %}active{% endif %}" href="{% url 'customer_account' %}?tab=points">
+                    <span class="sidebar-icon">★</span>
+                    <span>Điểm tích lũy</span>
+                </a>
+            </nav>
+
+            <a class="logout-link" href="{% url 'user_logout' %}">
+                <span class="sidebar-icon">⇥</span>
+                <span>Đăng xuất</span>
+            </a>
+        </aside>
+
+        <main class="main-panel">
+            <header class="topbar">
+                <a href="{% url 'see_service' %}">Dịch vụ</a>
+                <a href="{% url 'consultation_dashboard' %}">Tư vấn</a>
+                <a href="{% url 'public_review_page' %}">Đánh giá</a>
+                <a class="active" href="{% url 'customer_account' %}">Tài khoản</a>
+            </header>
+
+            <section class="workspace">
+                <section class="welcome-card">
+                    <h1>Xin chào, {{ display_name }}!</h1>
+                    <p>Chúc bạn có một ngày tuyệt vời ✨</p>
+                </section>
+
+                {% if messages %}
+                <div class="flash-stack">
+                    {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if active_tab == 'history' %}
+                <section class="content-card">
+                    <div class="section-header">
+                        <div>
+                            <h2>Lịch sử dịch vụ</h2>
+                            <p>Theo dõi các buổi đã sử dụng gần đây của bạn.</p>
+                        </div>
+                    </div>
+
+                    <div class="history-board">
+                        {% for item in history_items %}
+                        <article class="history-item">
+                            <div class="history-main">
+                                <strong>{{ item.service }}</strong>
+                                <span>{{ item.date }}</span>
+                            </div>
+                            <span class="history-status">{{ item.status }}</span>
+                            <strong class="history-price">{{ item.price }}</strong>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% elif active_tab == 'points' %}
+                <section class="content-card">
+                    <div class="section-header">
+                        <div>
+                            <h2>Điểm tích lũy</h2>
+                            <p>Tổng hợp điểm thưởng và quyền lợi hiện tại.</p>
+                        </div>
+                    </div>
+
+                    <div class="points-panel">
+                        <div class="points-hero">
+                            <span class="points-label">Điểm hiện có</span>
+                            <strong>{{ profile.loyalty_points }}</strong>
+                            <p>Bạn đang ở hạng khách hàng thân thiết và có thể dùng điểm cho ưu đãi đặt lịch tiếp theo.</p>
+                        </div>
+
+                        <div class="points-benefits">
+                            <article>
+                                <h3>Ưu đãi sinh nhật</h3>
+                                <p>Giảm giá riêng cho tháng sinh nhật khi đặt lịch trực tiếp.</p>
+                            </article>
+                            <article>
+                                <h3>Tư vấn ưu tiên</h3>
+                                <p>Nhận phản hồi nhanh hơn khi gửi yêu cầu tư vấn dịch vụ.</p>
+                            </article>
+                            <article>
+                                <h3>Tích điểm tự động</h3>
+                                <p>Mỗi lần hoàn thành dịch vụ, điểm sẽ cộng vào hồ sơ của bạn.</p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+                {% else %}
+                <section class="content-card">
+                    <div class="profile-head">
+                        <img class="profile-avatar" src="{{ profile.avatar_url|default:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80' }}" alt="{{ display_name }}">
+                        <div class="profile-copy">
+                            <h2>{{ display_name }}</h2>
+                            <p>Khách hàng thân thiết{% if member_since_label %} • Tham gia từ tháng {{ member_since_label }}{% endif %}</p>
+                        </div>
+                    </div>
+
+                    <form method="post" class="profile-form">
+                        {% csrf_token %}
+                        <div class="field-grid two">
+                            <label class="field">
+                                <span>Họ và tên</span>
+                                {{ form.full_name }}
+                            </label>
+                            <label class="field">
+                                <span>Số điện thoại</span>
+                                {{ form.phone }}
+                            </label>
+                        </div>
+
+                        <div class="field-grid two">
+                            <label class="field">
+                                <span>Email</span>
+                                <input class="account-input" type="email" value="{{ request.user.email }}" disabled>
+                            </label>
+                            <label class="field">
+                                <span>Ngày sinh</span>
+                                {{ form.birth_date }}
+                            </label>
+                        </div>
+
+                        <div class="field-grid">
+                            <label class="field">
+                                <span>Địa chỉ</span>
+                                {{ form.address }}
+                            </label>
+                        </div>
+
+                        <div class="field-grid">
+                            <label class="field">
+                                <span>Ghi chú (Da nhạy cảm, tiền sử dị ứng,...)</span>
+                                {{ form.notes }}
+                            </label>
+                        </div>
+
+                        <button class="primary-btn" type="submit">Cập nhật thông tin</button>
+                    </form>
+                </section>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

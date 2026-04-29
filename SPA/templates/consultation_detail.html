@@ -142,5 +142,10 @@
 
     <script src="{% static 'js/topnav-dropdown.js' %}?v=1"></script>
     <script src="{% static 'js/service-dashboard.js' %}?v=6"></script>
+    <script>
+        const roomId = {{ room_id }};
+        const userId = {{ request.user.id }};
+    </script>
+    <script src="{% static 'js/customer-consultation.js' %}"></script>
 </body>
 </html>

@@ -8,34 +8,9 @@
     <link rel="stylesheet" href="{% static 'css/customer-consultation.css' %}?v=1">
 </head>
 <body>
+{% include 'includes/customer_navbar.html' %}
     <div class="consultation-page">
-        <header class="site-header">
-            <a class="brand" href="{% url 'about_page' %}">
-                <span class="brand-title">MAI TRÂM</span>
-                <span class="brand-sub">Beauty &amp; Spa</span>
-            </a>
 
-            <nav class="site-nav" aria-label="Dieu huong chinh">
-                <a href="{% url 'see_service' %}">Dịch vụ</a>
-                <a class="active" href="{% url 'customer_consultation' %}">Tư vấn</a>
-                <a href="{% url 'public_review_page' %}">Đánh giá</a>
-                {% if request.user.is_authenticated %}
-                    {% if request.user.is_staff %}
-                    <a href="{% url 'service_dashboard' %}">Tài khoản</a>
-                    {% else %}
-                    <a href="{% url 'customer_account' %}">Tài khoản</a>
-                    {% endif %}
-                {% else %}
-                <a href="{% url 'user_login' %}">Tài khoản</a>
-                {% endif %}
-            </nav>
-
-            {% if request.user.is_authenticated and not request.user.is_staff %}
-            <a class="booking-btn" href="{% url 'booking' %}">Đặt lịch hẹn</a>
-            {% else %}
-            <a class="booking-btn" href="{% url 'see_service' %}">Đặt lịch hẹn</a>
-            {% endif %}
-        </header>
 
         <main class="consultation-main">
             <section class="faq-board">
@@ -117,6 +92,9 @@
     </div>
 
     <script src="{% static 'js/customer-consultation.js' %}?v=1"></script>
+    <script>
+        const roomId = {{ room_id }};
+        const userId = {{ request.user.id }};
+    </script>
 </body>
 </html>
-

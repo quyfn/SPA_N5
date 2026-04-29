@@ -8,22 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/booking.css' %}?v=4">
 </head>
 <body>
+    {% include 'includes/customer_navbar.html' %}
     <div class="booking-page">
-        <header class="site-header">
-            <a class="brand" href="{% url 'see_service' %}">
-                <span class="brand-mark">MAI TRÂM</span>
-                <span class="brand-sub">Beauty &amp; Spa</span>
-            </a>
-
-            <nav class="site-nav" aria-label="Điều hướng chính">
-                <a class="site-nav__link" href="{% url 'see_service' %}">Dịch vụ</a>
-                <a class="site-nav__link" href="{% url 'customer_consultation' %}">Tư vấn</a>
-                <a class="site-nav__link" href="{% url 'public_review_page' %}">Đánh giá</a>
-                <a class="site-nav__link" href="{% url 'customer_account' %}">Tài khoản</a>
-            </nav>
-
-            <a class="site-header__cta is-active" href="{% url 'booking' %}">Đặt lịch hẹn</a>
-        </header>
 
         <main class="booking-main">
             <section class="booking-board">

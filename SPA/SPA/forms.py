@@ -12,17 +12,17 @@ class LoginForm(forms.Form):
         widget=forms.EmailInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap email cua ban",
+                "placeholder": "Nhập email của bạn",
                 "required": True,
             }
         ),
     )
     password = forms.CharField(
-        label="Mat khau",
+        label="Mật khẩu",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap mat khau",
+                "placeholder": "Nhập mật khẩu",
                 "required": True,
             }
         ),
@@ -35,49 +35,49 @@ class RegisterForm(UserCreationForm):
         widget=forms.EmailInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap email cua ban",
+                "placeholder": "Nhập email của bạn",
                 "required": True,
             }
         ),
     )
     first_name = forms.CharField(
-        label="Ten",
+        label="Tên",
         max_length=30,
         widget=forms.TextInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap ten cua ban",
+                "placeholder": "Nhập tên của bạn",
                 "required": True,
             }
         ),
     )
     last_name = forms.CharField(
-        label="Ho",
+        label="Họ",
         max_length=150,
         widget=forms.TextInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap ho cua ban",
+                "placeholder": "Nhập họ của bạn",
                 "required": False,
             }
         ),
     )
     password1 = forms.CharField(
-        label="Mat khau",
+        label="Mật khẩu",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap mat khau (it nhat 8 ky tu)",
+                "placeholder": "Nhập mật khẩu (ít nhất 8 ký tự)",
                 "required": True,
             }
         ),
     )
     password2 = forms.CharField(
-        label="Xac nhan mat khau",
+        label="Xác nhận mật khẩu",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-input",
-                "placeholder": "Nhap lai mat khau",
+                "placeholder": "Nhập lại mật khẩu",
                 "required": True,
             }
         ),
@@ -90,7 +90,7 @@ class RegisterForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Email nay da duoc dang ky. Vui long su dung email khac.")
+            raise ValidationError("Email này đã được đăng ký. Vui lòng sử dụng email khác.")
         return email
 
     def clean_password2(self):
@@ -98,18 +98,18 @@ class RegisterForm(UserCreationForm):
         password2 = self.cleaned_data.get("password2")
 
         if password1 and password2 and password1 != password2:
-            raise ValidationError("Mat khau khong khop.")
+            raise ValidationError("Mật khẩu không khớp.")
         return password2
 
 
 class CustomerProfileForm(forms.ModelForm):
     full_name = forms.CharField(
-        label="Ho va ten",
+        label="Họ và tên",
         max_length=150,
         widget=forms.TextInput(
             attrs={
                 "class": "account-input",
-                "placeholder": "Nhap ho va ten",
+                "placeholder": "Nhập họ và tên",
             }
         ),
     )
@@ -121,7 +121,7 @@ class CustomerProfileForm(forms.ModelForm):
             "phone": forms.TextInput(
                 attrs={
                     "class": "account-input",
-                    "placeholder": "Nhap so dien thoai",
+                    "placeholder": "Nhập số điện thoại",
                 }
             ),
             "birth_date": forms.DateInput(
@@ -133,14 +133,14 @@ class CustomerProfileForm(forms.ModelForm):
             "address": forms.TextInput(
                 attrs={
                     "class": "account-input",
-                    "placeholder": "Nhap dia chi",
+                    "placeholder": "Nhập địa chỉ",
                 }
             ),
             "notes": forms.Textarea(
                 attrs={
                     "class": "account-input account-textarea",
                     "rows": 3,
-                    "placeholder": "Thong tin suc khoe, so thich dieu tri, luu y dac biet...",
+                    "placeholder": "Thông tin sức khỏe, sở thích điều trị, lưu ý đặc biệt...",
                 }
             ),
         }

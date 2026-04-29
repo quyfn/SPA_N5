@@ -1,0 +1,91 @@
+/* static/css/navbar.css */
+
+.global-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); /* Đổ bóng nhẹ cho đẹp */
+    border-radius: 12px;
+    margin: 10px;
+    font-family: sans-serif;
+}
+
+/* --- Phần Logo bên trái --- */
+.nav-brand {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.brand-title {
+    color: #ff4d85; /* Màu hồng Spa */
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.brand-sub {
+    color: #999;
+    font-size: 13px;
+}
+
+/* --- Phần Menu ở giữa --- */
+.nav-menu {
+    display: flex;
+    gap: 35px;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #ff4d85;
+}
+
+/* Hiệu ứng gạch chân màu hồng khi hover hoặc đang ở trang đó */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #ff4d85;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+}
+
+/* --- Nút Đặt lịch bên phải --- */
+.btn-booking {
+    text-decoration: none;
+    background-color: #ff4d85;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 30px; /* Bo tròn giống hình 2 */
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 4px 15px rgba(255, 77, 133, 0.4);
+    transition: all 0.3s ease;
+    min-width: 120px;
+    text-align: center;
+}
+
+.btn-booking:hover {
+    background-color: #e63971;
+    transform: translateY(-2px);
+}

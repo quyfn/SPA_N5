@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import CustomerProfileForm, LoginForm, RegisterForm
-from services.models import CustomerProfile, Service
+from services.models import CustomerProfile, Service, ChatRoom, Message
 
 
 def redirect_by_role(request):
@@ -21,7 +21,7 @@ def manager_required(view_func):
     @login_required(login_url="user_login")
     def wrapped(request, *args, **kwargs):
         if not request.user.is_staff:
-            messages.warning(request, "Trang nay chi danh cho quan ly.")
+            messages.warning(request, "Trang này chỉ dành cho quản lý.")
             return redirect("customer_account")
         return view_func(request, *args, **kwargs)
 
@@ -48,9 +48,9 @@ def format_service_price(value):
 
 def category_label(category):
     labels = {
-        Service.CATEGORY_FACE: "Da mat",
+        Service.CATEGORY_FACE: "Da mặt",
         Service.CATEGORY_BODY: "Body",
-        Service.CATEGORY_HAIR: "Triet long",
+        Service.CATEGORY_HAIR: "Triệt lông",
     }
     return labels.get(category, category)
 
@@ -77,21 +77,21 @@ def build_customer_history():
     return [
         {
             "date": "12/03/2026",
-            "service": "Cham soc da mat Collagen",
-            "status": "Hoan thanh",
-            "price": "1.200.000d",
+            "service": "Chăm sóc da mặt Collagen",
+            "status": "Hoàn thành",
+            "price": "1.200.000đ",
         },
         {
             "date": "27/02/2026",
-            "service": "Massage body thu gian",
-            "status": "Hoan thanh",
-            "price": "500.000d",
+            "service": "Massage body thư giãn",
+            "status": "Hoàn thành",
+            "price": "500.000đ",
         },
         {
             "date": "08/02/2026",
-            "service": "Tri mun chuyen sau",
-            "status": "Hoan thanh",
-            "price": "800.000d",
+            "service": "Trị mụn chuyên sâu",
+            "status": "Hoàn thành",
+            "price": "800.000đ",
         },
     ]
 
@@ -745,7 +745,7 @@ def customer_dashboard(request):
             "address": "Hải Châu, TP Đà Nẵng",
             "history": [
                 {"date": "18/02/2026", "service": "Massage body thư giãn", "status": "Hoàn Thành", "price": "800.000"},
-                {"date": "22/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn Thành", "price": "950.000"},
+                {"date": "22/02/2026", "service": "Acne Detox Therapy", "status": "Hoàn thành", "price": "950.000"},
             ]
         },
     ]
@@ -952,28 +952,27 @@ def get_consultation_data():
 
 @manager_required
 def consultation_dashboard(request):
-    conversation_data = get_consultation_data()
     conversations = []
-
-    for item in conversation_data.values():
-        messages = item["messages"]
-        latest_message = next((msg for msg in reversed(messages) if "text" in msg), None)
-
-        conversations.append(
-            {
-                "id": item["id"],
-                "name": item["name"],
-                "avatar_class": item["avatar_class"],
-                "preview": latest_message["text"] if latest_message else "",
-                "time": latest_message.get("time", "") if latest_message else "",
-            }
-        )
+    for room in ChatRoom.objects.filter(is_active=True).order_by('-updated_at'):
+        latest_message = Message.objects.filter(chat_room=room).order_by('-timestamp').first()
+        preview = (latest_message.content[:50] + ('...' if len(latest_message.content) > 50 else '')) if latest_message else "Chưa có tin nhắn"
+        time_str = latest_message.timestamp.strftime('%H:%M') if latest_message else ""
+        # Try to get full name if available
+        customer_name = getattr(room.customer, 'get_full_name', lambda: None)()
+        if not customer_name:
+            customer_name = room.customer.username
+        conversations.append({
+            'id': room.id,
+            'name': customer_name,
+            'avatar_class': 'avatar-neutral',
+            'preview': preview,
+            'time': time_str,
+        })
 
     search = request.GET.get("q", "").strip()
     empty_state = request.GET.get("empty", "") == "1"
     if search:
-        lowered = search.lower()
-        conversations = [item for item in conversations if lowered in item["name"].lower()]
+        conversations = [item for item in conversations if search.lower() in item["name"].lower()]
     if empty_state:
         conversations = []
     return render(
@@ -988,8 +987,23 @@ def consultation_dashboard(request):
 
 @manager_required
 def consultation_detail(request, conversation_id):
-    conversations = get_consultation_data()
-    conversation = conversations.get(conversation_id, conversations[3])
+    room = get_object_or_404(ChatRoom, id=conversation_id)
+    messages = Message.objects.filter(chat_room=room).order_by('timestamp')
+    chat_messages = []
+    for msg in messages:
+        side = 'right' if msg.sender == request.user else 'left'
+        chat_messages.append({
+            'side': side,
+            'text': msg.content,
+            'time': msg.timestamp.strftime('%H:%M'),
+        })
+
+    conversation = {
+        'id': room.id,
+        'name': room.customer.username,
+        'avatar_class': 'avatar-neutral',
+        'messages': chat_messages,
+    }
     modal_state = request.GET.get("modal", "")
     return render(
         request,
@@ -997,6 +1011,7 @@ def consultation_detail(request, conversation_id):
         {
             "conversation": conversation,
             "modal_state": modal_state,
+            "room_id": room.id,
         },
     )
 
@@ -1013,74 +1028,6 @@ def feedback_detail(request, feedback_id):
         "content": "Dịch vụ massage rất tốt! Nhân viên massage chuyên nghiệp, lực tay vừa phải. Tinh dầu thơm nhẹ nhàng không gây kích ứng. Sau 60 phút massage, cơ thể mình thư giãn hẳn, giảm đau mỏi vai gáy rất nhiều. Giá cả hợp lý, spa sạch sẽ thoáng mát.",
     }
     return render(request, "feedback_detail.html", {"feedback": feedback})
-
-
-def customer_consultation_page(request):
-    faq_items = [
-        {
-            "question": "Da nhay cam co the lam lieu trinh massage hoac cham soc mat khong?",
-            "answer": "Chung toi co cac lieu trinh danh rieng cho da nhay cam, su dung san pham diu nhe va nhan vien se tu van ky truoc khi thuc hien.",
-        },
-        {
-            "question": "Lieu trinh lam trang da co an toan cho da nhay cam khong?",
-            "answer": "Spa su dung san pham chuyen dung cho da nhay cam va ky thuat vien duoc dao tao de giam nguy co kich ung truoc khi tien hanh toan bo lieu trinh.",
-        },
-        {
-            "question": "Sau khi lan kim hoac peel da, toi can bao lau de da phuc hoi hoan toan?",
-            "answer": "Thoi gian phuc hoi tuy vao co dia va do sau cua lieu trinh, thong thuong tu 3 den 7 ngay neu cham soc dung cach tai nha.",
-        },
-    ]
-    chat_messages = [
-        {
-            "side": "right",
-            "text": "Shop oi tu van nay giup em voi ve goi cham da voi",
-            "time": "10:48",
-        },
-        {
-            "side": "left",
-            "text": "Chao mung ban den voi dich vu Mai Tram, ban vui long doi mot chut se co nhan vien tu van ngay.",
-            "time": "10:50",
-        },
-        {
-            "side": "right",
-            "text": "Shop oi tu van a",
-            "time": "10:50",
-        },
-        {
-            "side": "left",
-            "text": "Em day a",
-            "time": "10:52",
-        },
-    ]
-    return render(
-        request,
-        "customer_consultation.html",
-        {
-            "faq_items": faq_items,
-            "chat_messages": chat_messages,
-        },
-    )
-
-
-def about_page(request):
-    return render(request, 'about.html')
-
-
-def public_review_page(request):
-    reviews = get_public_reviews()
-    average_rating = round(sum(item["rating"] for item in reviews) / len(reviews), 1) if reviews else 0
-    total_reviews = 120
-    with_images = sum(1 for item in reviews if item["image_urls"])
-    highlighted_reviews = reviews[:3]
-
-    context = {
-        "reviews": reviews,
-        "highlighted_reviews": highlighted_reviews,
-        "average_rating": average_rating,
-        "total_reviews": total_reviews,
-        "with_images": with_images,
-    }
-    return render(request, "public_reviews.html", context)
 
 
 @customer_required
@@ -1101,7 +1048,7 @@ def customer_account(request):
             profile = form.save()
             request.user.first_name = form.cleaned_data["full_name"]
             request.user.save(update_fields=["first_name"])
-            messages.success(request, "Thong tin tai khoan da duoc cap nhat.")
+            messages.success(request, "Thông tin tài khoản đã được cập nhật.")
             return redirect("customer_account")
     else:
         form = CustomerProfileForm(instance=profile)
@@ -1136,47 +1083,47 @@ def build_booking_calendar(days=14):
 @customer_required
 def booking_page(request):
     if request.method == "POST":
-        messages.success(request, "Dat lich thanh cong. Spa se lien he xac nhan som.")
+        messages.success(request, "Đặt lịch thành công. Spa sẽ liên hệ xác nhận sớm.")
         return redirect("booking")
 
     services = [
         {
             "id": 1,
-            "name": "Cham soc da mat Collagen",
-            "description": "Lam sach sau, duong am va tai tao da",
-            "duration": "60 phut",
+            "name": "Chăm sóc da mặt Collagen",
+            "description": "Làm sạch sâu, dưỡng ẩm và tái tạo da",
+            "duration": "60 phút",
             "rating": "4.9",
-            "price": "1.200.000d",
+            "price": "1.200.000đ",
             "tone": "peach",
             "image_url": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=80",
         },
         {
             "id": 2,
-            "name": "Tri mun chuyen sau",
-            "description": "Dieu tri mun an toan, hieu qua",
-            "duration": "60 phut",
+            "name": "Trị mụn chuyên sâu",
+            "description": "Điều trị mụn an toàn, hiệu quả",
+            "duration": "60 phút",
             "rating": "4.8",
-            "price": "800.000d",
+            "price": "800.000đ",
             "tone": "rose",
             "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
         },
         {
             "id": 3,
-            "name": "Massage body thu gian",
-            "description": "Massage toan than thong co va giam cang thang",
-            "duration": "60 phut",
+            "name": "Massage body thư giãn",
+            "description": "Massage toàn thân thông cơ và giảm căng thẳng",
+            "duration": "60 phút",
             "rating": "4.8",
-            "price": "500.000d",
+            "price": "500.000đ",
             "tone": "sea",
             "image_url": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80",
         },
         {
             "id": 4,
-            "name": "Triet long vinh vien bang laser IPL",
-            "description": "Cong nghe triet long hien dai va an toan",
-            "duration": "90 phut",
+            "name": "Triệt lông vĩnh viễn bằng laser IPL",
+            "description": "Công nghệ triệt lông hiện đại và an toàn",
+            "duration": "90 phút",
             "rating": "4.7",
-            "price": "2.000.000d",
+            "price": "2.000.000đ",
             "tone": "mint",
             "image_url": "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=900&q=80",
         },
@@ -1185,54 +1132,54 @@ def booking_page(request):
     package_catalog = [
         {
             "id": "basic",
-            "name": "Goi co ban",
+            "name": "Gói cơ bản",
             "sessions": "1-2",
-            "price": "Tu 800.000d",
-            "result": "Phu hop cho lan dau trai nghiem",
+            "price": "Từ 800.000đ",
+            "result": "Phù hợp cho lần đầu trải nghiệm",
             "benefits": [
-                "Lam sach co ban",
-                "Massage mat thu gian",
-                "Dap mat na Collagen",
-                "Duong am nhanh",
+                "Làm sạch cơ bản",
+                "Massage mặt thư giãn",
+                "Đắp mặt nạ Collagen",
+                "Dưỡng ẩm nhanh",
             ],
         },
         {
             "id": "standard",
-            "name": "Goi tieu chuan",
+            "name": "Gói tiêu chuẩn",
             "sessions": "3-5",
-            "price": "Tu 1.300.000d",
-            "result": "Hieu qua ro ret sau 1 thang",
+            "price": "Từ 1.300.000đ",
+            "result": "Hiệu quả rõ rệt sau 1 tháng",
             "benefits": [
-                "Tat ca quyen loi goi co ban",
-                "Tay te bao chet chuyen sau",
-                "Serum duong da cao cap",
-                "Tu van cham soc tai nha",
+                "Tất cả quyền lợi gói cơ bản",
+                "Tẩy tế bào chết chuyên sâu",
+                "Serum dưỡng da cao cấp",
+                "Tư vấn chăm sóc tại nhà",
             ],
         },
         {
             "id": "advanced",
-            "name": "Goi cao cap",
+            "name": "Gói cao cấp",
             "sessions": "8-10",
-            "price": "Tu 2.500.000d",
-            "result": "Cham soc toan dien, hieu qua lau dai",
+            "price": "Từ 2.500.000đ",
+            "result": "Chăm sóc toàn diện, hiệu quả lâu dài",
             "benefits": [
-                "Tat ca quyen loi goi tieu chuan",
-                "Cong nghe dieu tri tien tien",
-                "Massage vai gay mien phi",
-                "Tang bo skincare mini",
+                "Tất cả quyền lợi gói tiêu chuẩn",
+                "Công nghệ điều trị tiên tiến",
+                "Massage vai gáy miễn phí",
+                "Tặng bộ skincare mini",
             ],
         },
         {
             "id": "vip",
-            "name": "Goi VIP",
+            "name": "Gói VIP",
             "sessions": "12-15",
-            "price": "Tu 3.500.000d",
-            "result": "Trai nghiem dang cap 5 sao",
+            "price": "Từ 3.500.000đ",
+            "result": "Trải nghiệm đẳng cấp 5 sao",
             "benefits": [
-                "Tat ca quyen loi goi cao cap",
-                "Phong rieng VIP sang trong",
-                "Thu cong nghe tri lieu moi",
-                "Tang bo skincare cao cap",
+                "Tất cả quyền lợi gói cao cấp",
+                "Phòng riêng VIP sang trọng",
+                "Thủ công nghệ trị liệu mới",
+                "Tặng bộ skincare cao cấp",
             ],
             "theme": "vip",
         },
@@ -1256,7 +1203,7 @@ def booking_page(request):
         "current_month_label": date.today().strftime("%m/%Y"),
         "customer_info": {
             "full_name": profile.display_name,
-            "phone": profile.phone or "Chua cap nhat",
+            "phone": profile.phone or "Chưa cập nhật",
             "email": request.user.email,
         },
         "history": build_customer_history(),
@@ -1287,3 +1234,69 @@ def service_detail(request, slug):
             "related_services": related_services,
         },
     )
+
+
+@customer_required
+def customer_consultation_page(request):
+    faq_items = [
+        {
+            "question": "Da nhạy cảm có thể làm liệu trình massage hoặc chăm sóc mặt không?",
+            "answer": "Chúng tôi có các liệu trình dành riêng cho da nhạy cảm, sử dụng sản phẩm dịu nhẹ và nhân viên sẽ tư vấn kỹ trước khi thực hiện.",
+        },
+        {
+            "question": "Liệu trình làm trắng da có an toàn cho da nhạy cảm không?",
+            "answer": "Spa sử dụng sản phẩm chuyên dụng cho da nhạy cảm và kỹ thuật viên được đào tạo để giảm nguy cơ kích ứng trước khi tiến hành toàn bộ liệu trình.",
+        },
+        {
+            "question": "Sau khi lăn kim hoặc peel da, tôi cần bao lâu để da phục hồi hoàn toàn?",
+            "answer": "Thời gian phục hồi tùy vào cơ địa và độ sâu của liệu trình, thường từ 3 đến 7 ngày nếu chăm sóc đúng cách tại nhà.",
+        },
+    ]
+
+    # Get or create chat room for the customer
+    chat_room, created = ChatRoom.objects.get_or_create(
+        customer=request.user,
+        defaults={'manager': User.objects.filter(is_staff=True).first()}  # Assign first manager
+    )
+
+    # Get messages
+    messages = Message.objects.filter(chat_room=chat_room).order_by('timestamp')
+    chat_messages = []
+    for msg in messages:
+        side = 'right' if msg.sender == request.user else 'left'
+        chat_messages.append({
+            'side': side,
+            'text': msg.content,
+            'time': msg.timestamp.strftime('%H:%M'),
+        })
+
+    return render(
+        request,
+        "customer_consultation.html",
+        {
+            "faq_items": faq_items,
+            "chat_messages": chat_messages,
+            "room_id": chat_room.id,
+        },
+    )
+
+
+def about_page(request):
+    return render(request, 'about.html')
+
+
+def public_review_page(request):
+    reviews = get_public_reviews()
+    average_rating = round(sum(item["rating"] for item in reviews) / len(reviews), 1) if reviews else 0
+    total_reviews = 120
+    with_images = sum(1 for item in reviews if item["image_urls"])
+    highlighted_reviews = reviews[:3]
+
+    context = {
+        "reviews": reviews,
+        "highlighted_reviews": highlighted_reviews,
+        "average_rating": average_rating,
+        "total_reviews": total_reviews,
+        "with_images": with_images,
+    }
+    return render(request, "public_reviews.html", context)

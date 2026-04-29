@@ -1,0 +1,35 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+
+<header class="global-navbar">
+    <a class="nav-brand" href="{% url 'about_page' %}">
+        <span class="brand-title">MAI TRÂM</span>
+        <span class="brand-sub">Beauty &amp; Spa</span>
+    </a>
+
+    <nav class="nav-menu">
+        <a href="{% url 'see_service' %}" class="nav-link {% if request.resolver_match.url_name == 'see_service' %}active{% endif %}">Dịch vụ</a>
+
+        <a href="{% url 'customer_consultation' %}" class="nav-link {% if request.resolver_match.url_name == 'customer_consultation' %}active{% endif %}">Tư vấn</a>
+
+        <a href="{% url 'public_review_page' %}" class="nav-link {% if request.resolver_match.url_name == 'public_review_page' %}active{% endif %}">Đánh giá</a>
+
+        {% if request.user.is_authenticated %}
+            {% if request.user.is_staff %}
+                <a href="{% url 'service_dashboard' %}" class="nav-link">Tài khoản</a>
+            {% else %}
+                <a href="{% url 'customer_account' %}" class="nav-link {% if request.resolver_match.url_name == 'customer_account' %}active{% endif %}">Tài khoản</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'user_login' %}" class="nav-link">Tài khoản</a>
+        {% endif %}
+    </nav>
+
+    <div class="nav-actions">
+        {% if request.user.is_authenticated and not request.user.is_staff %}
+            <a class="btn-booking" href="{% url 'booking' %}">Đặt lịch hẹn</a>
+        {% else %}
+            <a class="btn-booking" href="{% url 'user_login' %}">Đặt lịch hẹn</a>
+        {% endif %}
+    </div>
+</header>

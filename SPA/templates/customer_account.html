@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/customer-account.css' %}?v=2">
 </head>
 <body>
+{% include 'includes/customer_navbar.html' %}
     <div class="account-shell">
         <aside class="sidebar">
             <a class="brand" href="{% url 'about_page' %}">
@@ -37,13 +38,6 @@
         </aside>
 
         <main class="main-panel">
-            <header class="topbar">
-                <a href="{% url 'see_service' %}">Dịch vụ</a>
-                <a href="{% url 'booking' %}">Đặt lịch</a>
-                <a href="{% url 'customer_consultation' %}">Tư vấn</a>
-                <a href="{% url 'public_review_page' %}">Đánh giá</a>
-                <a class="active" href="{% url 'customer_account' %}">Tài khoản</a>
-            </header>
 
             <section class="workspace">
                 <section class="welcome-card">

@@ -8,10 +8,10 @@ from services.models import CustomerProfile, Service
 
 SERVICE_SEED = [
     {
-        "name": "Cham soc da mat Collagen",
+        "name": "Chăm sóc da mặt Collagen",
         "slug": "cham-soc-da-mat-collagen",
-        "short_description": "Lam sach sau, duong am va tai tao da.",
-        "description": "Lieu trinh cham soc da mat chuyen sau ket hop collagen giup phuc hoi do am va cai thien do dan hoi.",
+        "short_description": "Làm sạch sâu, dưỡng ẩm và tái tạo da.",
+        "description": "Liệu trình chăm sóc da mặt chuyên sâu kết hợp collagen giúp phục hồi độ ẩm và cải thiện độ đàn hồi.",
         "category": Service.CATEGORY_FACE,
         "duration_minutes": 90,
         "price": 1200000,
@@ -21,10 +21,10 @@ SERVICE_SEED = [
         "display_order": 1,
     },
     {
-        "name": "Tri mun chuyen sau",
+        "name": "Trị mụn chuyên sâu",
         "slug": "tri-mun-chuyen-sau",
-        "short_description": "Dieu tri mun an toan, hieu qua.",
-        "description": "Lieu trinh lam sach, hut ba nhon, lay nhan mun va phuc hoi hang rao bao ve da.",
+        "short_description": "Điều trị mụn an toàn, hiệu quả.",
+        "description": "Liệu trình làm sạch, hút bã nhờn, lấy nhân mụn và phục hồi hàng rào bảo vệ da.",
         "category": Service.CATEGORY_FACE,
         "duration_minutes": 60,
         "price": 800000,
@@ -34,10 +34,10 @@ SERVICE_SEED = [
         "display_order": 2,
     },
     {
-        "name": "Massage body thu gian",
+        "name": "Massage body thư giãn",
         "slug": "massage-body-thu-gian",
-        "short_description": "Massage toan than giup thu gian.",
-        "description": "Goi massage body voi tinh dau thien nhien, giai toa cang thang va giam moi vai gay.",
+        "short_description": "Massage toàn thân giúp thư giãn.",
+        "description": "Gói massage body với tinh dầu thiên nhiên, giải tỏa căng thẳng và giảm mỏi vai gáy.",
         "category": Service.CATEGORY_BODY,
         "duration_minutes": 60,
         "price": 500000,
@@ -47,10 +47,10 @@ SERVICE_SEED = [
         "display_order": 3,
     },
     {
-        "name": "Triet long laser IPL",
+        "name": "Triệt lông laser IPL",
         "slug": "triet-long-laser-ipl",
-        "short_description": "Cong nghe triet long hien dai, an toan.",
-        "description": "Cong nghe IPL giup giam long moc lai va toi uu trai nghiem dieu tri.",
+        "short_description": "Công nghệ triệt lông hiện đại, an toàn.",
+        "description": "Công nghệ IPL giúp giảm lông mọc lại và tối ưu trải nghiệm điều trị.",
         "category": Service.CATEGORY_HAIR,
         "duration_minutes": 90,
         "price": 2000000,
@@ -60,10 +60,10 @@ SERVICE_SEED = [
         "display_order": 4,
     },
     {
-        "name": "Goi dau duong sinh",
+        "name": "Gội đầu dưỡng sinh",
         "slug": "goi-dau-duong-sinh",
-        "short_description": "Lam sach da dau va thu gian.",
-        "description": "Lieu trinh ket hop massage da dau giup giam cang thang va cham soc toc.",
+        "short_description": "Làm sạch da đầu và thư giãn.",
+        "description": "Liệu trình kết hợp massage da đầu giúp giảm căng thẳng và chăm sóc tóc.",
         "category": Service.CATEGORY_BODY,
         "duration_minutes": 45,
         "price": 300000,
@@ -73,10 +73,10 @@ SERVICE_SEED = [
         "display_order": 5,
     },
     {
-        "name": "Xong hoi sauna",
+        "name": "Xông hơi sauna",
         "slug": "xong-hoi-sauna",
-        "short_description": "Gian no lo chan long va dao thai doc to.",
-        "description": "Xong hoi ket hop huong lieu giup thu gian co bap va dao thai doc to cho co the.",
+        "short_description": "Gian nở lỗ chân lông và đào thải độc tố.",
+        "description": "Xông hơi kết hợp hương liệu giúp thư giãn cơ bắp và đào thải độc tố cho cơ thể.",
         "category": Service.CATEGORY_BODY,
         "duration_minutes": 90,
         "price": 700000,
@@ -84,6 +84,32 @@ SERVICE_SEED = [
         "image_url": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80",
         "status": Service.STATUS_ACTIVE,
         "display_order": 6,
+    },
+    {
+        "name": "Acne Detox Therapy",
+        "slug": "acne-detox-therapy",
+        "short_description": "Thanh lọc da mụn, làm sạch sâu lỗ chân lông.",
+        "description": "Liệu trình thanh lọc da mụn chuyên sâu, loại bỏ tạp chất và cân bằng dầu nhờn.",
+        "category": Service.CATEGORY_FACE,
+        "duration_minutes": 75,
+        "price": 950000,
+        "rating": "4.6",
+        "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80",
+        "status": Service.STATUS_ACTIVE,
+        "display_order": 7,
+    },
+    {
+        "name": "Post-Acne Recovery Therapy",
+        "slug": "post-acne-recovery-therapy",
+        "short_description": "Phục hồi da sau mụn, giảm thâm sẹo.",
+        "description": "Liệu trình phục hồi da sau mụn, giảm thâm nám và tái tạo tế bào da mới.",
+        "category": Service.CATEGORY_FACE,
+        "duration_minutes": 90,
+        "price": 1200000,
+        "rating": "4.7",
+        "image_url": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1200&q=80",
+        "status": Service.STATUS_ACTIVE,
+        "display_order": 8,
     },
 ]
 
@@ -153,5 +179,3 @@ class Command(BaseCommand):
                 f"Seed completed. Services: {Service.objects.count()} total ({created_services} new)."
             )
         )
-
-
